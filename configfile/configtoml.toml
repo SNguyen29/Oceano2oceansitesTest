@@ -1,0 +1,69 @@
+# this is a configuration file for ApplicationTest program
+
+progname  	= "Test"
+progversion = "0.1.0"
+
+roscopfile = "roscop/code_roscop.csv"
+
+profil 		= "profile"
+timeserie 	= "time-series"
+trajectoire	= "trajectory"
+
+# this is config oceanosites
+[global]
+author 	= "jgrelet IRD july 2015 CASSIOPEE cruise"
+debug 	= 0
+echo 	= 1
+
+[cruise]
+cycleMesure = "CASSIOPEE"
+plateforme 	= "ATALANTE"
+callsign  	= "FNCM"
+institute 	= "IRD"
+pi          = "MARIN"
+timezone    = "GMT"
+beginDate   = "19/07/2015"
+endDate     = "23/08/2015"
+creator     = "Jacques.Grelet@ird.fr"
+
+[instrument]
+seabird			= "Seabird"
+tabprofil 		= ["CTD","BTL"]
+tabtimeserie	= [""]
+tabtrajectoire	= [""]
+type 			= ["CTD","BTL"]
+decodetype		= ['(\*END\*)','^\s+(Bottle)']
+
+
+[ctd]
+cruisePrefix   			= "csp"
+stationPrefixLength  	= 5
+titleSummary  			= "CTD profiles processed during CASSIOPEE cruise"
+typeInstrument   		= "SBE911+"
+instrumentNumber  		= "09P29544-0694" 
+split          			= ["PRES","3","DEPTH","4","ETDD","2","TEMP","5","PSAL","22","DENS","24","SVEL","26","DOX2","19","FLU2","14","TUR3","13","LGH3","15","NUMP","18","NAVG","21"]
+splitAll       			= ["PRES","3","DEPTH","4","ETDD","2","TE01","5","TE02","6","PSA1","22","PSA2","23","DO12","19","DO22","20","DEN1","24","DEN2","25","SVEL","26","CND1","7","CND2","8","DOV1","9","DVT1","10","DOV2","11","DVT2","12","TUR3","13","FLU2","14","LGH3","15","LGHT","16","LGH4","17","NUMP","18","NAVG","21"]
+
+[btl]
+typeInstrument 		= "SBE32 standard 22 Niskin bottles"
+instrumentNumber  	= "unknown"
+titleSummary  		= "Water sample during PIRATA-FR25 cruise with 11 levels"
+comment        		= "CTD bottles water sampling with temperature, salinity and oxygen from primary and secondary sensors"
+split 				= ["BOTL","1","PSA1","5","PSA2","6","DO11","7","DO21","8","PRES","14","DEPTH","15"]
+
+# this is string for decode Seabird 
+[Seabird]
+prefix 				= 'cruisePrefix\s*=\s*(.*)'
+header 				= '^[*#]'
+cruise 				= 'Cruise\s*:\s*(.*)'
+ship 				= 'Ship\s*:\s*(.*)'
+station 			= 'Station\s*:\s*\D*(\d*)'
+type 				= 'Type\s*:\s*(.*)'
+operator 			= 'Operator\s*:\s*(.*)'
+bottomDepth 		= 'Bottom Depth\s*:\s*(\d*\.?\d+?)\s*\S*'
+dummyBottomDepth 	= 'Bottom Depth\s*:\s*$'
+date 				= 'Date\s*:\s*(\d+)/(\d+)/(\d+)'
+hour 				= '[Heure|Hour]\s*:\s*(\d+)[:hH](\d+):(\d+)'
+systemTime 			= 'System UpLoad Time =\s+(.*)'
+latitude 			= 'NMEA Latitude\s*=\s*(\d+\s+\d+.\d+\s+\w)'
+longitude 			= 'NMEA Longitude\s*=\s*(\d+\s+\d+.\d+\s+\w)'
