@@ -1,7 +1,7 @@
 //GrammCTD.go
 //File for with the regular expression for CTD type instrument and function for read CTD files
 
-package main
+package seabird
 
 import (
 	"bufio"
@@ -14,12 +14,13 @@ import (
 	"strings"
 	"Oceano2oceansitesTest/config"
 	"Oceano2oceansitesTest/lib"
+	"Oceano2oceansitesTest/toml"
 )
 
 
 //function
 // read .cnv files and return dimensions
-func firstPassCTD(nc *lib.Nc,files []string) (int, int) {
+func firstPassCTD(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (int, int) {
 	
 	regIsHeader := regexp.MustCompile(cfg.Seabird.Header)
 	
@@ -41,7 +42,7 @@ func firstPassCTD(nc *lib.Nc,files []string) (int, int) {
 		}
 		defer fid.Close()
 
-		profile := GetProfileNumber(nc,file)
+		profile := GetProfileNumber(nc,cfg,file)
 		scanner := bufio.NewScanner(fid)
 		for scanner.Scan() {
 			str := scanner.Text()
@@ -76,7 +77,7 @@ func firstPassCTD(nc *lib.Nc,files []string) (int, int) {
 		// store the maximum pressure and maximum depth value per cast
 		nc.Extras_f[fmt.Sprintf("PRES:%d", int(profile))] = maxPres
 		nc.Extras_f[fmt.Sprintf("DEPTH:%d", int(profile))] = math.Floor(maxDepth)
-		nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile))] = "n/a"
+		nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile))] = "UNKNOW"
 		if maxPres > maxPresAll {
 			maxPresAll = maxPres
 		}
@@ -93,7 +94,7 @@ func firstPassCTD(nc *lib.Nc,files []string) (int, int) {
 	return len(files), maxLine
 }
 
-func secondPassCTD(nc *lib.Nc,files []string) {
+func secondPassCTD(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,optDebug *bool) {
 
 	regIsHeader := regexp.MustCompile(cfg.Seabird.Header)
 
@@ -113,17 +114,17 @@ func secondPassCTD(nc *lib.Nc,files []string) {
 		defer fid.Close()
 		// fmt.Printf("Read %s\n", file)
 
-		profile := GetProfileNumber(nc,file)
+		profile := GetProfileNumber(nc,cfg,file)
 		scanner := bufio.NewScanner(fid)
 		downcast := true
 		for scanner.Scan() {
 			str := scanner.Text()
 			match := regIsHeader.MatchString(str)
 			if match {
-				DecodeHeaderSeabird(nc,str, profile)
+				DecodeHeaderSeabird(nc,cfg,str, profile,optDebug)
 			} else {
 				// fill map data with information contain in read line str
-				DecodeDataSeabird(nc,&m,str, profile, file, line)
+				DecodeDataSeabird(nc,m,str, profile, file, line)
 
 				if downcast {
 					// fill 2D slice

@@ -1,7 +1,7 @@
 // DecodeDataSeabird.go
 //Function for decode the data for Seabird constructor
 
-package main
+package seabird
 
 import (
 	"fmt"

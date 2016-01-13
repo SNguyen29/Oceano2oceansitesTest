@@ -1,5 +1,5 @@
 // DecodeHeaderSeabird_test.go
-package main
+package seabird
 
 import "testing"
 import "fmt"

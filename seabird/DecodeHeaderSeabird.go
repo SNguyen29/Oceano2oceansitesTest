@@ -1,7 +1,7 @@
 // DecodeHeaderSeabird.go
 //Function for decode the header of a data file from Seabird constructor
 
-package main
+package seabird
 
 import (
 	"fmt"
@@ -9,6 +9,7 @@ import (
 	"strings"
 	"regexp"
 	"Oceano2oceansitesTest/lib"
+	"Oceano2oceansitesTest/toml"
 )
 
 // parse header line from .cnv and extract correct information
@@ -16,7 +17,7 @@ import (
 // to parse time with non standard format, see:
 // http://golang.org/src/time/format.go
 
-func  DecodeHeaderSeabird(nc *lib.Nc,str string, profile float64) {
+func  DecodeHeaderSeabird(nc *lib.Nc,cfg toml.Configtoml,str string, profile float64,optDebug *bool) {
 	
 	regCruise := regexp.MustCompile(cfg.Seabird.Cruise)
 	regShip := regexp.MustCompile(cfg.Seabird.Ship)

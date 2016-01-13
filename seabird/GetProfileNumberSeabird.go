@@ -1,16 +1,24 @@
 // GetProfileNumber.go
 //Function for get the profil number of a data file for Seabird Constructor
-package main
+package seabird
 
 import (
 	"fmt"
 	"log"
 	"strconv"
 	"strings"
+	"io"
+	"io/ioutil"
 	"Oceano2oceansitesTest/lib"
+	"Oceano2oceansitesTest/toml"
 )
 
-func GetProfileNumber(nc *lib.Nc,str string) float64 {
+// use for debug mode
+var debug io.Writer = ioutil.Discard
+// use for echo mode
+var echo io.Writer = ioutil.Discard
+
+func GetProfileNumber(nc *lib.Nc,cfg toml.Configtoml,str string) float64 {
 	var value float64
 	var err error
 	var CruisePrefix string = cfg.Ctd.CruisePrefix

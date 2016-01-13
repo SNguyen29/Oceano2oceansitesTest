@@ -1,17 +1,26 @@
-package main
+package netcdf
 
 import (
 	"fmt"
 	"github.com/fhs/go-netcdf/netcdf"
 	"log"
 	"strings"
+	"io"
+	"io/ioutil"
 	"Oceano2oceansitesTest/lib"
 	"Oceano2oceansitesTest/config"
+	"Oceano2oceansitesTest/toml"
+	r "Oceano2oceansitesTest/roscop"
 )
+
+// use for debug mode
+var debug io.Writer = ioutil.Discard
+// use for echo mode
+var echo io.Writer = ioutil.Discard
 
 // creates the NetCDF file following nc structure.
 //func WriteNetcdf(any interface{}) error {
-func WriteNetcdf(nc *lib.Nc,m *config.Map,ncType string) {
+func WriteNetcdf(nc *lib.Nc,m *config.Map, cfg toml.Configtoml,ncType string,prefixAll string) {
 
 	// build filename
 	filename := fmt.Sprintf(cfg.Outputfile+"OS_%s%s_%s.nc",
@@ -67,7 +76,7 @@ func WriteNetcdf(nc *lib.Nc,m *config.Map,ncType string) {
 		map_1D[key] = v
 		
 		//initialise struct roscop with netcdf variable in reflect ways without knowing the form of the roscop struct
-		Reflectroscop(roscop[key],map_1D[key])
+		r.Reflectroscop(roscop[key],map_1D[key])
 		
 	}
 
@@ -89,7 +98,7 @@ func WriteNetcdf(nc *lib.Nc,m *config.Map,ncType string) {
 		map_2D[key] = v
 		
 		//initialise struct roscop with netcdf variable in reflect ways without knowing the form of the roscop struct
-		Reflectroscop(roscop[key],map_2D[key])
+		r.Reflectroscop(roscop[key],map_2D[key])
 	
 	}
 

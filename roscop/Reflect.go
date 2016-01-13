@@ -1,15 +1,14 @@
 //Reflect.go
 //Function for who use the struct RoscopAtrribute to initialise variable nectcdf
-package main
+package roscop
 
 import (
 		"reflect"
 		"github.com/fhs/go-netcdf/netcdf"
 		"strings"
-		"Oceano2oceansitesTest/roscop"
 		)
 
-func Reflectroscop(r roscop.RoscopAttribute,m netcdf.Var){
+func Reflectroscop(r RoscopAttribute,m netcdf.Var){
 		
 		val := reflect.ValueOf(r)
 

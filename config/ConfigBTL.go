@@ -44,7 +44,7 @@ func GetConfigBTL(nc *lib.Nc,m *Map,cfg toml.Configtoml,configFile string,Type s
 	nc.Variables_1D["LONGITUDE"] = []float64{}
 	nc.Variables_1D["BATH"] = []float64{}
 	nc.Variables_1D["TYPECAST"] = []float64{}
-	nc.Variables_1D["TYPECAST"] = append(nc.Variables_1D["TYPECAST"].([]float64))
+	nc.Variables_1D["TYPECAST"] = append(nc.Variables_1D["TYPECAST"].([]float64),0)
 	nc.Roscop = roscop.CodeRoscopFromCsv(cfg.Roscopfile)
 
 	// add some global attributes for profile, change in future

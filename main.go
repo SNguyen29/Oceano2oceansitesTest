@@ -11,6 +11,7 @@ import (
 	"io"
 	"io/ioutil"
 	"Oceano2oceansitesTest/analyze"
+	"Oceano2oceansitesTest/seabird"
 	
 ) 
 
@@ -58,7 +59,7 @@ func main() {
 		
 		//case constructor == seabird
 		case filestruct.Constructeur.Number == 0 :
-			ReadSeabird(&nc,&m,files,optCfgfile)
+			seabird.ReadSeabird(&nc,&m,filestruct,cfg,files,optCfgfile,optAll,optDebug,prefixAll)
 		}
 	
 }

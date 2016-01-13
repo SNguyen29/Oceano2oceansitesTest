@@ -1,5 +1,5 @@
 // writeAsciiCtd.go
-package main
+package seabird
 
 import (
 	"bufio"
@@ -8,13 +8,15 @@ import (
 	"os"
 	"strings"
 	"Oceano2oceansitesTest/lib"
+	"Oceano2oceansitesTest/toml"
+
 )
 
 const (
 	codeForProfile = -1
 )
 
-func WriteAsciiCTD(nc *lib.Nc,map_format map[string]string, hdr []string, inst string ) {
+func WriteAsciiCTD(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr []string, inst string,prefixAll string) {
 	// define 2 files, profiles header and data
 	var asciiFilename string
 

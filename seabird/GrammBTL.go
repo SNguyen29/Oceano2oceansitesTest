@@ -1,7 +1,7 @@
 //GrammBTL.go
 //File for with the regular expression for BTL type instrument and function for read BTL files
 
-package main
+package seabird
 
 import (
 	"bufio"
@@ -13,6 +13,7 @@ import (
 	"strings"
 	"Oceano2oceansitesTest/lib"
 	"Oceano2oceansitesTest/config"
+	"Oceano2oceansitesTest/toml"
 )
 
 
@@ -23,7 +24,7 @@ var regIsMontDayYear = regexp.MustCompile(`^\s+\d+\s+(\w{3})\s+(\d{2})\s+(\d{4})
 var regIsHeaderBtl = regexp.MustCompile(`^[*#]|^\s+\w+`)
 
 // read .btl files and return dimensions
-func firstPassBTL(nc *lib.Nc,m *config.Map,files []string) (int, int) {
+func firstPassBTL(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (int, int) {
 
 	var line int = 0
 	var maxLine int = 0
@@ -40,16 +41,16 @@ func firstPassBTL(nc *lib.Nc,m *config.Map,files []string) (int, int) {
 		}
 		defer fid.Close()
 
-		profile := GetProfileNumber(nc,file)
+		profile := GetProfileNumber(nc,cfg,file)
 		scanner := bufio.NewScanner(fid)
 		for scanner.Scan() {
 			str := scanner.Text()
 			match := regIsHeaderBtl.MatchString(str)
 			if !match {
-				p(str)
+				fmt.Println(str)
 				values := strings.Fields(str)
-				p("BOTL", m.Map_var["BOTL"])
-				p(values[m.Map_var["BOTL"]])
+				fmt.Println("BOTL", m.Map_var["BOTL"])
+				fmt.Println(values[m.Map_var["BOTL"]])
 				if bottle, err = strconv.ParseFloat(values[m.Map_var["BOTL"]], 64); err != nil {
 					log.Fatal(err)
 				}
@@ -71,7 +72,7 @@ func firstPassBTL(nc *lib.Nc,m *config.Map,files []string) (int, int) {
 		}
 		// store the maximum pressure value
 		nc.Extras_f[fmt.Sprintf("BOTL:%d", int(profile))] = maxBottle
-		nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile))] = "n/a"
+		nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile))] = "UNKNOW"
 		if maxBottle > maxBottleAll {
 			maxBottleAll = maxBottle
 		}
@@ -88,7 +89,7 @@ func firstPassBTL(nc *lib.Nc,m *config.Map,files []string) (int, int) {
 }
 
 // read .cnv files and extract data
-func secondPassBTL(nc *lib.Nc,m *config.Map,files []string) {
+func secondPassBTL(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,optDebug *bool) {
 
 	regIsHeader := regexp.MustCompile(cfg.Seabird.Header)
 	
@@ -106,13 +107,13 @@ func secondPassBTL(nc *lib.Nc,m *config.Map,files []string) {
 		defer fid.Close()
 		// fmt.Printf("Read %s\n", file)
 
-		profile := GetProfileNumber(nc,file)
+		profile := GetProfileNumber(nc,cfg,file)
 		scanner := bufio.NewScanner(fid)
 		for scanner.Scan() {
 			str := scanner.Text()
 			match := regIsHeader.MatchString(str)
 			if match {
-				DecodeHeaderSeabird(nc,str, profile)
+				DecodeHeaderSeabird(nc,cfg,str, profile,optDebug)
 			} else {
 				match = regIsMontDayYear.MatchString(str)
 				if match {

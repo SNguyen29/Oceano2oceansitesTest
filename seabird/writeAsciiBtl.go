@@ -1,5 +1,5 @@
 // writeAsciiBtl
-package main
+package seabird
 
 import (
 	"bufio"
@@ -20,7 +20,7 @@ func WriteHeader(nc *lib.Nc,map_format map[string]string, hdr []string) {
 	fmt.Println("Hello from WriteHeader for bootle !")
 }
 
-func WriteAsciiBTL2(nc *lib.Nc,map_format map[string]string, hdr []string, inst string) {
+func WriteAsciiBTL2(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr []string, inst string,prefixAll string) {
 	// define 2 files, profiles header and data
 	var asciiFilename string
 

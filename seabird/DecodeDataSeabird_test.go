@@ -1,5 +1,5 @@
 // DecodeDataSeabird_test.go
-package main
+package seabird
 
 import "testing"
 
