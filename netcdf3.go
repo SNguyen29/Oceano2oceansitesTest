@@ -14,7 +14,7 @@ import (
 func WriteNetcdf(nc *lib.Nc,m *config.Map,ncType string) {
 
 	// build filename
-	filename := fmt.Sprintf("output/OS_%s%s_%s.nc",
+	filename := fmt.Sprintf(cfg.Outputfile+"OS_%s%s_%s.nc",
 		strings.ToUpper(nc.Attributes["cycle_mesure"]),
 		strings.ToUpper(prefixAll),
 		ncType)

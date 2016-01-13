@@ -27,8 +27,8 @@ func WriteAsciiBTL2(nc *lib.Nc,map_format map[string]string, hdr []string, inst 
 	// build filenames
 	str := nc.Attributes["cycle_mesure"]
 	str = strings.Replace(str, "\r", "", -1)
-	headerFilename := fmt.Sprintf("output/%s."+inst, strings.ToLower(str))
-	asciiFilename = fmt.Sprintf("output/%s%s_"+inst, strings.ToLower(str), prefixAll)
+	headerFilename := fmt.Sprintf(cfg.Outputfile+"%s."+inst, strings.ToLower(str))
+	asciiFilename = fmt.Sprintf(cfg.Outputfile+"%s%s_"+inst, strings.ToLower(str), prefixAll)
 	//fmt.Println(headerFilename)
 	//fmt.Println(asciiFilename)
 

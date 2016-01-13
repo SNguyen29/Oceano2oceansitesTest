@@ -14,6 +14,7 @@ type Configtoml struct{
 	Progname	string
 	Progversion	string
 	Roscopfile 	string
+	Outputfile	string
 	
 	Profil		string
 	Timeserie	string
@@ -38,7 +39,7 @@ type Configtoml struct{
 	}
 	
 	Instrument struct{
-		Seabird			string
+		Constructor		[]string
 		Tabprofil		[]string
 		Tabtimeserie	[]string
 		Tabtrajectoire	[]string

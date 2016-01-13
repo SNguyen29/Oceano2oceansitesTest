@@ -5,6 +5,8 @@ progversion = "0.1.0"
 
 roscopfile = "roscop/code_roscop.csv"
 
+outputfile = "output/"
+
 profil 		= "profile"
 timeserie 	= "time-series"
 trajectoire	= "trajectory"
@@ -27,7 +29,7 @@ endDate     = "23/08/2015"
 creator     = "Jacques.Grelet@ird.fr"
 
 [instrument]
-seabird			= "Seabird"
+constructor		= ["Seabird",""]
 tabprofil 		= ["CTD","BTL"]
 tabtimeserie	= [""]
 tabtrajectoire	= [""]

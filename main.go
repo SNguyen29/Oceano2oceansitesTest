@@ -56,7 +56,8 @@ func main() {
 	
 	switch{
 		
-		case filestruct.Constructeur.Name == "Seabird" :
+		//case constructor == seabird
+		case filestruct.Constructeur.Number == 0 :
 			ReadSeabird(&nc,&m,files,optCfgfile)
 		}
 	

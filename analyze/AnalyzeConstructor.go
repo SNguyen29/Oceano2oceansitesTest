@@ -13,7 +13,7 @@ import (
 // define constante for constructor type
 type Constructor struct{
 		Name	string
-		number	int
+		Number	int
 	}
 
 
@@ -34,9 +34,9 @@ func AnalyzeConstructor(cfg toml.Configtoml,files []string) Constructor {
 		str := scanner.Text()
 		
 		switch {
-		case strings.ContainsAny(cfg.Instrument.Seabird,str) : 
-			result.Name = "Seabird"
-			result.number = 1
+		case strings.ContainsAny(cfg.Instrument.Constructor[0],str) : 
+			result.Name = cfg.Instrument.Constructor[0]
+			result.Number = 0
 		}
 	}
 	return result
