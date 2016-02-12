@@ -4,15 +4,24 @@ package seabird
 import "testing"
 import "fmt"
 import "regexp"
+import "Oceano2oceansitesTest/lib"
+import "Oceano2oceansitesTest/toml"
 
-//Function for init before the test
-func (ncTest *Nc) TestInitNC(){
-	
-	initToml()
-	fmt.Println(cfg.Roscopfile)
-	
-		// define map from netcdf structure
-	ncTest.Dimensions = make(map[string]int)
+//function for testing Decodeheader 
+func TestDecodeHeader(t *testing.T){
+// variable for test
+
+var cfg toml.Configtoml
+var fileconfig string
+var ncTest lib.Nc
+var optDebug *bool
+fileconfigTest := "../configfile/configtoml.toml"	
+
+fileconfig,cfg = toml.InitToml(fileconfigTest)
+
+fmt.Println("fileconfig ",fileconfig)
+
+ncTest.Dimensions = make(map[string]int)
 	ncTest.Attributes = make(map[string]string)
 	ncTest.Extras_f = make(map[string]float64)
 	ncTest.Extras_s = make(map[string]string)
@@ -25,18 +34,7 @@ func (ncTest *Nc) TestInitNC(){
 	ncTest.Variables_1D["LONGITUDE"] = []float64{}
 	ncTest.Variables_1D["BATH"] = []float64{}
 	ncTest.Variables_1D["TYPECAST"] = []float64{}
-	ncTest.Roscop = codeRoscopFromCsv(cfg.Roscopfile)
 
-	// add some global attributes for profile, change in future
-	ncTest.Attributes["data_type"] = "OceanSITES profile data"
-}
-
-//function for testing Decodeheader 
-func TestDecodeHeader(t *testing.T){
-// variable for test
-
-var ncTest Nc
-ncTest.TestInitNC()
 var profileTest float64 = 00101
 
 var StringTest string = "* System UpLoad Time = Jul 20 2015 06:15:13"
@@ -56,6 +54,5 @@ if temp.MatchString(StringTest){
 	}else{
 		fmt.Println("not same")
 		}
-
-ncTest.DecodeHeaderSeabird(StringTest,profileTest)	
+DecodeHeader(&ncTest,cfg,StringTest,profileTest,optDebug)	
 }

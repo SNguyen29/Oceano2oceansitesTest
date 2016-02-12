@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"errors"
@@ -9,7 +9,14 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"io"
+	"io/ioutil"
 )
+
+// use for debug mode
+var Debug io.Writer = ioutil.Discard
+// use for echo mode
+var Echo io.Writer = ioutil.Discard
 
 const (
 	secondsPerMinute           = 60
@@ -106,7 +113,7 @@ func Position2Decimal(pos string) (float64, error) {
 		tmp := math.Abs(min)
 		sec := (tmp - min) * 100.0
 		value = (deg + (min+sec/100.0)/60.0) * multiplier
-		fmt.Fprintln(debug, "positionDeci:", pos, " -> ", value)
+		fmt.Fprintln(Debug, "positionDeci:", pos, " -> ", value)
 	} else {
 		return 1e36, errors.New("positionDeci: failed to decode position")
 	}
@@ -175,3 +182,35 @@ func toFixed(num float64, precision int) float64 {
 	output := math.Pow(10, float64(precision))
 	return float64(round(num*output)) / output
 }
+
+//convert dd/mm/yyyy hh:mm:ss to jan 02 2006 hh:mm:ss
+func ConvertDate(s string) string{
+	
+	var m string
+	regdate := regexp.MustCompile(`(\d+)/(\d+)/(\d+)\s+(\d+):(\d+):(\d+)`)
+	
+	res := regdate.FindStringSubmatch(s)
+	days := res[1]
+	month,_ := strconv.ParseInt(res[2],10,64)
+	year := res[3]
+	hour := res[4]
+	minute := res[5]
+	seconde := res[6]
+	
+	switch month {
+		case 1: m = "Jan"
+		case 2: m = "Feb"
+		case 3: m = "Mar"
+		case 4: m = "Apr"
+		case 5: m = "May"
+		case 6: m = "Jun"
+		case 7: m = "Jul"
+		case 8: m = "Aug"
+		case 9: m = "Sep"
+		case 10: m = "Oct"
+		case 11: m = "Nov"
+		case 12: m = "Dec"
+		}
+	
+	return m+" "+days+" "+year+" "+hour+":"+minute+":"+seconde
+	}

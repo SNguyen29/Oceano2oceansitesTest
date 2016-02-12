@@ -66,3 +66,7 @@ func InitMap() Map{
 func GetData(data interface{})float64{
 		return data.(float64)
 	}
+
+func GetPhysicalParametersList(m *Map) []string {
+	return m.Hdr
+}

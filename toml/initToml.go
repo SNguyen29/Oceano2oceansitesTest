@@ -8,8 +8,6 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-var fileconfig = "configfile/configtoml.toml"
-
 type Configtoml struct{
 	Progname	string
 	Progversion	string
@@ -64,6 +62,16 @@ type Configtoml struct{
 		Comment        		string
 		Split 				[]string
 	}
+	
+	Ladcp struct{
+		CruisePrefix		string
+		StationPrefixLength int
+		TypeInstrument 		string
+		InstrumentNumber  	string
+		TitleSummary  		string
+		Comment        		string
+		Split				[]string
+	}
 		
 	Seabird struct{
 		Prefix				string
@@ -81,16 +89,24 @@ type Configtoml struct{
 		Latitude 			string
 		Longitude 			string
 		}
+		
+	Ifm struct{
+		Header				string
+		Date 				string
+		StartTime 			string
+		Latitude 			string
+		Longitude 			string
+		}
 }
 	
 //init the struct configtoml with the config file
-func  InitToml() (string,Configtoml){
+func  InitToml(file string) (Configtoml){
 	
 	var cfg Configtoml
 	
-	if _, err := toml.DecodeFile(fileconfig, &cfg); err != nil {
+	if _, err := toml.DecodeFile(file, &cfg); err != nil {
 		fmt.Println(err)
-		return fileconfig,cfg
+		return cfg
 	}
-	return fileconfig,cfg
+	return cfg
 }

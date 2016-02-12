@@ -1,4 +1,4 @@
-// writeAsciiCtd.go
+// writeAscii.go
 package seabird
 
 import (
@@ -16,7 +16,7 @@ const (
 	codeForProfile = -1
 )
 
-func WriteAsciiCTD(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr []string, inst string,prefixAll string) {
+func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr []string, inst string,prefixAll string) {
 	// define 2 files, profiles header and data
 	var asciiFilename string
 
@@ -68,7 +68,7 @@ func WriteAsciiCTD(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, 
 	str = ""
 	for _, key := range hdr {
 		fmt.Fprintf(fbuf_ascii, "%s   ", key)
-		fmt.Fprintf(debug, "%s   ", key)
+		fmt.Fprintf(lib.Debug, "%s   ", key)
 	}
 	// append new line
 	//fmt.Fprintln(fbuf_ascii, "\n")
@@ -92,8 +92,8 @@ func WriteAsciiCTD(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, 
 	for x := 0; x < len_1D; x++ {
 		str = ""
 		// write profile informations to ASCII data file with DEPTH = -1
-		t1 := NewTimeFromJulian(time[x])
-		t2 := NewTimeFromJulianDay(nc.Extras_f[fmt.Sprintf("ETDD:%d", int(profile[x]))], t1)
+		t1 := lib.NewTimeFromJulian(time[x])
+		t2 := lib.NewTimeFromJulianDay(nc.Extras_f[fmt.Sprintf("ETDD:%d", int(profile[x]))], t1)
 		// TODOS: adapt profile format to stationPrefixLength
 		fmt.Fprintf(fbuf_ascii, "%05.0f %4d %f %f %f %s",
 			profile[x],
@@ -109,8 +109,8 @@ func WriteAsciiCTD(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, 
 			profile[x],
 			t1.Format("02/01/2006 15:04:05"),
 			t2.Format("02/01/2006 15:04:05"),
-			DecimalPosition2String(lat[x], 0),
-			DecimalPosition2String(lon[x], 0),
+			lib.DecimalPosition2String(lat[x], 0),
+			lib.DecimalPosition2String(lon[x], 0),
 			nc.Extras_f[fmt.Sprintf("DEPTH:%d", int(profile[x]))],
 			bath[x],
 			nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile[x]))],	

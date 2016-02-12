@@ -10,22 +10,29 @@ import (
 	"strconv"
 )
 
-type RoscopAttribute struct {
-	long_name  string
-	units      string
-	valid_min  float64
-	valid_max  float64
-	format     string
-	_FillValue float64
+type m map[string]map[string]string
+
+// roscop represents the attributes associated with each netCDF variable
+type Roscop struct {
+	m
+	physicalParametersOrderedList []string
+	attributesOrderedList         map[string][]string
+	attributesType                map[string]string
 }
 
-
 // documentation for csv is at http://golang.org/pkg/encoding/csv/
-// TODO: could not find
-func CodeRoscopFromCsv(filename string) map[string]RoscopAttribute {
+func NewRoscop(filename string) Roscop {
 
-	var roscop = make(map[string]RoscopAttribute)
+	// use a map of map to store for each physical parameter a map where keys are
+	// attributes
+	var r = Roscop{
+		m: make(m),
+		physicalParametersOrderedList: []string{},
+		attributesOrderedList:         make(map[string][]string),
+		attributesType:                make(map[string]string),
+	}
 
+	// open csv file
 	file, err := os.Open(filename)
 	if err != nil {
 		// err is printable
@@ -37,14 +44,33 @@ func CodeRoscopFromCsv(filename string) map[string]RoscopAttribute {
 	}
 	// automatically call Close() at the end of current method
 	defer file.Close()
-	//
+
+	// init new reader
 	reader := csv.NewReader(file)
 	// options are available at:
 	// http://golang.org/src/pkg/encoding/csv/reader.go?s=3213:3671#L94
 	reader.Comma = ';'
 
+	// read first header line
+	fields, err := reader.Read()
+	//fmt.Println(fields)
+
+	// read second line
+	types, err := reader.Read()
+	//fmt.Println(types)
+
+	// fill map of attribute type: string or numeric
+	for i := 0; i < len(fields); i++ {
+		r.attributesType[fields[i]] = types[i]
+	}
+	//fmt.Println(r.attributesType)
+
+	// read next lines and fill roscop object
 	for {
-		r := RoscopAttribute{}
+
+		// initialize a new empty map to store attributes variable
+		// with pair of name and value
+		mfields := map[string]string{}
 
 		// read just one record, but we could ReadAll() as well
 		record, err := reader.Read()
@@ -53,31 +79,81 @@ func CodeRoscopFromCsv(filename string) map[string]RoscopAttribute {
 			break
 		} else if err != nil {
 			fmt.Println("Error:", err)
+		}
+		// key is physical parameter
+		key := record[0]
 
+		for i := 1; i < len(fields); i++ {
+			if record[i] != "" {
+				// store attributes position
+				// the iteration order is not specified and is not guaranteed to be
+				// the same from one iteration to the next in golang
+				r.attributesOrderedList[key] = append(r.attributesOrderedList[key], fields[i])
+				// fill map with non empty values
+				mfields[fields[i]] = record[i]
+			}
 		}
-		// record is an array of string so is directly printable
-		//fmt.Println("Record ", record, "and has", len(record), "fields")
-		// and we can iterate on top of that
-		r.long_name = record[1]
-		r.units = record[2]
-		if v, err := strconv.ParseFloat(record[3], 64); err == nil {
-			r.valid_min = v
-		}
-		if v, err := strconv.ParseFloat(record[4], 64); err == nil {
-			r.valid_max = v
-		}
-		r.format = record[5]
-		if v, err := strconv.ParseFloat(record[6], 64); err == nil {
-			r._FillValue = v
-		}
-		roscop[record[0]] = r
 
+		// put the new map to roscop map with the rigth physical parameter
+		r.m[key] = mfields
+
+		// the iteration order is not specified and is not guaranteed to be
+		// the same from one iteration to the next in golang
+		r.physicalParametersOrderedList = append(r.physicalParametersOrderedList, key)
+		//fmt.Fprintf(debug, "%s: %v\n", record[0], mfields)
 	}
-	return roscop
+	//f("%#v", r)
+	return r
 }
 
-//function to get format of a struct RoscopAttribute
-func GetRoscopformat(ro RoscopAttribute) string {
-	
-	return ro.format
+// returm an ordered list of all physical parameters
+func (r Roscop) GetPhysicalParameters() []string {
+	return r.physicalParametersOrderedList
+}
+
+// returm an ordered list of attributes for an physical parameter
+func (r Roscop) GetAttributes(physicalParameter string) []string {
+	// remove first key "types"
+	return r.attributesOrderedList[physicalParameter][1:]
+}
+
+// returm the attribute value as a string for a physical parameter
+func (r Roscop) GetAttributesStringValue(physicalParameter string, attributeName string) string {
+	return r.m[physicalParameter][attributeName]
+}
+
+// returm the attribute value with the right type for a physical parameter
+func (r Roscop) GetAttributesValue(physicalParameter string, attributeName string) interface{} {
+	switch r.attributesType[attributeName] {
+	case "string":
+		return r.m[physicalParameter][attributeName]
+	case "numeric":
+		// convert generic numeric type with the rigth type of physical parameter
+		switch r.m[physicalParameter]["types"] {
+		case "char", "byte":
+			return byte(r.m[physicalParameter][attributeName][0])
+		case "int", "int32":
+			value, _ := strconv.ParseInt(r.m[physicalParameter][attributeName], 10, 32)
+			return int32(value)
+		case "float32", "float":
+			value, _ := strconv.ParseFloat(r.m[physicalParameter][attributeName], 32)
+			return float32(value)
+		case "float64", "double":
+			value, _ := strconv.ParseFloat(r.m[physicalParameter][attributeName], 64)
+			return value
+		default:
+			log.Fatal("Error: check the column types  of your roscop file," +
+				" valid values are: char, byte, int, int32, float, float32, double and float64")
+		}
+	default:
+		log.Fatal("Error: check the second line of your roscop file," +
+			" values sould be string or numeric")
+	}
+
+	return r.m[physicalParameter][attributeName]
+}
+
+// returm m contain
+func (r Roscop)GetAttributesM(Key string,Name string) string{
+	return r.m[Key][Name]
 }

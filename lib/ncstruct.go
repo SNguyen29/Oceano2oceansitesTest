@@ -17,7 +17,7 @@ type Nc struct {
 	Attributes   map[string]string
 	Extras_f     map[string]float64 // used to store max of profiles value
 	Extras_s     map[string]string  // used to store max of profiles type
-	Roscop       map[string]roscop.RoscopAttribute
+	Roscop       roscop.Roscop
 }
 
 // initialize a slice with 2 dimensions to store data

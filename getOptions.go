@@ -13,7 +13,7 @@ var optDebug *bool
 var optEcho *bool
 var optAll *bool
 
-func GetOptions() ([]string, string) {
+func GetOptions(fileconfig string) ([]string, string) {
 
 	var files []string
 

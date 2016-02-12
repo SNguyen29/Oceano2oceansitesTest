@@ -1,7 +1,7 @@
-//GrammCTD.go
-//File for with the regular expression for CTD type instrument and function for read CTD files
+//GrammLADCP.go
+//File Grammar for LADCP instrument
 
-package seabird
+package ifm
 
 import (
 	"bufio"
@@ -20,14 +20,16 @@ import (
 
 //function
 // read .cnv files and return dimensions
-func firstPassCTD(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (int, int) {
+func firstPassLADCP(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (int, int) {
 	
-	regIsHeader := regexp.MustCompile(cfg.Seabird.Header)
+	regIsHeader := regexp.MustCompile(cfg.Ifm.Header)
 	
 	//variable init
 	var	pres float64 = 0
 	var depth float64 = 0
 	var	maxDepth float64 = 0
+	var cpt int = 0
+	var minPres float64 = 0
 	var maxPres	float64 = 0
 	var maxPresAll float64 = 0
 	var line int = 0
@@ -41,7 +43,6 @@ func firstPassCTD(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (
 			log.Fatal(err)
 		}
 		defer fid.Close()
-
 		profile := GetProfileNumber(nc,cfg,file)
 		scanner := bufio.NewScanner(fid)
 		for scanner.Scan() {
@@ -57,9 +58,12 @@ func firstPassCTD(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (
 				if depth, err = strconv.ParseFloat(values[m.Map_var["DEPTH"]], 64); err != nil {
 					log.Fatal(err)
 				} else {
-					//p(math.Floor(depth))
 				}
 			}
+			if pres > 0 && cpt == 0 {
+				minPres = pres
+				cpt++
+				}
 			if pres > maxPres {
 				maxPres = pres
 				maxDepth = depth
@@ -75,6 +79,7 @@ func firstPassCTD(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (
 			maxLine = line
 		}
 		// store the maximum pressure and maximum depth value per cast
+		nc.Extras_f[fmt.Sprintf("MINPRES:%d", int(profile))] = minPres
 		nc.Extras_f[fmt.Sprintf("PRES:%d", int(profile))] = maxPres
 		nc.Extras_f[fmt.Sprintf("DEPTH:%d", int(profile))] = math.Floor(maxDepth)
 		nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile))] = "UNKNOW"
@@ -94,13 +99,13 @@ func firstPassCTD(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (
 	return len(files), maxLine
 }
 
-func secondPassCTD(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,optDebug *bool) {
+func secondPassLADCP(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,optDebug *bool) {
 
-	regIsHeader := regexp.MustCompile(cfg.Seabird.Header)
+	regIsHeader := regexp.MustCompile(cfg.Ifm.Header)
 
 	fmt.Fprintf(lib.Echo, "Second pass ...\n")	
 	
-	// initialize profile and pressure max
+	// initialize profile 
 	var nbProfile int = 0
 
 	// loop over each files passed throw command line
@@ -115,6 +120,7 @@ func secondPassCTD(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,o
 		// fmt.Printf("Read %s\n", file)
 
 		profile := GetProfileNumber(nc,cfg,file)
+		nc.Variables_1D["PROFILE"] = append(nc.Variables_1D["PROFILE"].([]float64),profile)
 		scanner := bufio.NewScanner(fid)
 		downcast := true
 		for scanner.Scan() {
@@ -125,7 +131,7 @@ func secondPassCTD(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,o
 			} else {
 				// fill map data with information contain in read line str
 				DecodeData(nc,m,str, profile, file, line)
-
+				
 				if downcast {
 					// fill 2D slice
 					for _, key := range m.Hdr {
@@ -140,7 +146,7 @@ func secondPassCTD(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,o
 					}
 				} else {
 					// store last julian day for end profile
-					nc.Extras_f[fmt.Sprintf("ETDD:%d", int(profile))] = m.Data["ETDD"].(float64)
+					//nc.Extras_f[fmt.Sprintf("ETDD:%d", int(profile))] = m.Data["ETDD"].(float64)
 					//fmt.Println(presMax)
 				}
 				line++
@@ -154,8 +160,14 @@ func secondPassCTD(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,o
 		nbProfile += 1
 
 		// store last julian day for end profile
-		nc.Extras_f[fmt.Sprintf("ETDD:%d", int(profile))] = m.Data["ETDD"].(float64)
+		//nc.Extras_f[fmt.Sprintf("ETDD:%d", int(profile))] = m.Data["ETDD"].(float64)
 		//fmt.Println(presMax)
+		value := nc.Extras_s["DATE"] +" "+ nc.Extras_s["HEURE"]
+		value = lib.ConvertDate(value)
+		var t = lib.NewTimeFromString("Jan 02 2006 15:04:05", value)
+		v := t.Time2JulianDec()
+		nc.Variables_1D["TIME"] = append(nc.Variables_1D["TIME"].([]float64),v)
 	}
+	
 	fmt.Fprintln(lib.Debug, nc.Variables_1D["PROFILE"])
 }

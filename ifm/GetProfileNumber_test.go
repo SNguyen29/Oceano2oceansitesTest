@@ -1,5 +1,7 @@
 // GetProfileNumber_test.go
-package seabird
+//Test for GetProfileNumber for IFM constructor
+
+package ifm
 
 import "testing"
 
@@ -16,20 +18,13 @@ func TestGetProfile(t *testing.T){
 fileconfigTest := "../configfile/configtoml.toml"
 var cfg toml.Configtoml
 var ncTest lib.Nc
-var file string
 	
-file,cfg = toml.InitToml(fileconfigTest)
-
-fmt.Println("fileconfig : ",file)
+cfg = toml.InitToml(fileconfigTest)
 
 ncTest.Extras_s = make(map[string]string)
 
-TestFile := "../data/csp00101.cnv"
+TestFile := "../data/csp00201.lad"
 Profile := GetProfileNumber(&ncTest,cfg,TestFile)
-fmt.Println("Profile CTD Number : ",Profile)
-
-TestFile2 := "../data/csp00101.btl"
-Profile2 := GetProfileNumber(&ncTest,cfg,TestFile2)
-fmt.Println("Profile BTL Number : ",Profile2)
+fmt.Println("Profile LADCP Number : ",Profile)
 
 }

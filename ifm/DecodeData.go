@@ -1,7 +1,7 @@
-// DecodeDataSeabird.go
-//Function for decode the data for Seabird constructor
+//DecodeData.go
+//Function for decode the data for IFM constructor
 
-package seabird
+package ifm
 
 import (
 	"fmt"
@@ -15,13 +15,11 @@ import (
 // extract data from the line read in str with order gave by hash map_var
 // values:  1318 81.583900 3.000 2.983 29.5431 29.5464 5 ...
 // map_var: PRES:2 DEPTH:3 PSAL:21 DOX2:18 ...
-func DecodeDataSeabird(nc *lib.Nc,m *config.Map,str string, profile float64, file string, line int) {
+func DecodeData(nc *lib.Nc,m *config.Map,str string, profile float64, file string, line int) {
 
 	// split the string str using whitespace characters
 	values := strings.Fields(str)
-	fmt.Println("Value : ",values)
 	nb_value := len(values)
-	fmt.Println("NbValues : ",nb_value)
 
 	// for each physical parameter, extract its data from the rigth column
 	// and save it in map data

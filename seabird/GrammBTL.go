@@ -21,7 +21,7 @@ import (
 var regIsHour = regexp.MustCompile(`^\s+(\d+:\d+:\d+)`)
 var regIsDate = regexp.MustCompile(`^\s+\d+\s+(\w{3}\s+\d{2}\s+\d{4})`)
 var regIsMontDayYear = regexp.MustCompile(`^\s+\d+\s+(\w{3})\s+(\d{2})\s+(\d{4})`)
-var regIsHeaderBtl = regexp.MustCompile(`^[*#]|^\s+\w+`)
+var regIsHeaderBtl = regexp.MustCompile(`^[*#]`)
 
 // read .btl files and return dimensions
 func firstPassBTL(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (int, int) {
@@ -31,8 +31,10 @@ func firstPassBTL(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (
 	var bottle float64 = 0
 	var maxBottle float64 = 0
 	var maxBottleAll float64 = 0
+	
+	regbottle := regexp.MustCompile(cfg.Instrument.Decodetype[1])
 
-	fmt.Fprintf(echo, "First pass: ")
+	fmt.Fprintf(lib.Echo, "First pass: ")
 	// loop over each files passed throw command line
 	for _, file := range files {
 		fid, err := os.Open(file)
@@ -49,12 +51,17 @@ func firstPassBTL(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (
 			if !match {
 				fmt.Println(str)
 				values := strings.Fields(str)
-				fmt.Println("BOTL", m.Map_var["BOTL"])
-				fmt.Println(values[m.Map_var["BOTL"]])
-				if bottle, err = strconv.ParseFloat(values[m.Map_var["BOTL"]], 64); err != nil {
-					log.Fatal(err)
+				match := regbottle.MatchString(str)
+				if match {
+					v := strings.Split(str," ")
+					fmt.Println(v)
+				//fmt.Println("BOTL", m.Map_var["BOTL"])
+				//fmt.Println(values[m.Map_var["BOTL"]])
+				//if bottle, err = strconv.ParseFloat(values[m.Map_var["BOTL"]], 64); err != nil {
+					//log.Fatal(err)
+				//}
+				fmt.Fprintln(lib.Debug, values)
 				}
-				fmt.Fprintln(debug, values)
 
 			}
 			if bottle > maxBottle {
@@ -65,7 +72,7 @@ func firstPassBTL(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (
 				log.Fatal(err)
 			}
 		}
-		fmt.Fprintf(debug, "Read %s size: %d max pres: %4.f\n", file, line, maxBottle)
+		fmt.Fprintf(lib.Debug, "Read %s size: %d max pres: %4.f\n", file, line, maxBottle)
 
 		if line > maxLine {
 			maxLine = line
@@ -82,9 +89,9 @@ func firstPassBTL(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (
 		line = 0
 	}
 	
-	fmt.Fprintf(echo, "First pass: %d files read, maximum bottle found: %4.0f db\n", len(files), maxBottle)
-	fmt.Fprintf(debug, "First pass: %d files read, maximum pressure found: %4.0f db\n", len(files), maxBottle)
-	fmt.Fprintf(debug, "First pass: size %d x %d\n", len(files), maxLine)
+	fmt.Fprintf(lib.Echo, "First pass: %d files read, maximum bottle found: %4.0f db\n", len(files), maxBottle)
+	fmt.Fprintf(lib.Debug, "First pass: %d files read, maximum pressure found: %4.0f db\n", len(files), maxBottle)
+	fmt.Fprintf(lib.Debug, "First pass: size %d x %d\n", len(files), maxLine)
 	return len(files), maxLine
 }
 
@@ -95,7 +102,7 @@ func secondPassBTL(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,o
 	
 	var month, day, year string
 
-	fmt.Fprintf(echo, "Second pass ...\n")
+	fmt.Fprintf(lib.Echo, "Second pass ...\n")
 	// loop over each files passed throw command line
 	for _, file := range files {
 		var line int = 0
@@ -113,7 +120,7 @@ func secondPassBTL(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,o
 			str := scanner.Text()
 			match := regIsHeader.MatchString(str)
 			if match {
-				DecodeHeaderSeabird(nc,cfg,str, profile,optDebug)
+				DecodeHeader(nc,cfg,str, profile,optDebug)
 			} else {
 				match = regIsMontDayYear.MatchString(str)
 				if match {
@@ -128,12 +135,12 @@ func secondPassBTL(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,o
 					time := res[1]
 					//f("Time -> %s\n", time)
 					// create new Time object, see tools.go
-					var t = NewTimeFromString("Jan 02 2006 15:04:05 UTC",
+					var t = lib.NewTimeFromString("Jan 02 2006 15:04:05 UTC",
 						fmt.Sprintf("%s %s %s %s", month, day, year, time))
 					//					v := t.Time2JulianDec()
 					//					t1 := NewTimeFromJulian(v)
 					y, _ := strconv.ParseFloat(year, 64)
-					t2 := NewTimeFromJulianDay(y, t)
+					t2 := lib.NewTimeFromJulianDay(y, t)
 					nc.Variables_1D["TIME"] = append(nc.Variables_1D["TIME"].([]float64),
 						t2.JulianDayOfYear())
 					//p(t2.JulianDayOfYear())

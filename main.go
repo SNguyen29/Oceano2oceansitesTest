@@ -4,7 +4,6 @@ package main
 import (
 	"fmt"
 	"log"
-	//"os"
 	"Oceano2oceansitesTest/lib"
 	"Oceano2oceansitesTest/config"
 	"Oceano2oceansitesTest/toml"
@@ -12,8 +11,11 @@ import (
 	"io/ioutil"
 	"Oceano2oceansitesTest/analyze"
 	"Oceano2oceansitesTest/seabird"
+	"Oceano2oceansitesTest/ifm"
 	
 ) 
+
+var filetoml = "configfile/configtoml.toml"
 
 // file prefix for --all option: "-all" for all parameters, "" empty by default
 var prefixAll = ""
@@ -36,13 +38,11 @@ type AllData_2D lib.AllData_2D
 var nc lib.Nc
 var m config.Map
 
-var fileconfig string
-
 // main body
 func main() {
 	
 	//init variable cfg with config file in TOML
-	fileconfig,cfg = toml.InitToml()
+	cfg = toml.InitToml(filetoml)
 	//init variable m with empty map 
 	m = config.InitMap()
 	
@@ -50,7 +50,7 @@ func main() {
 	// to change the flags on the default logger
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	
-	files, optCfgfile := GetOptions()
+	files, optCfgfile := GetOptions(filetoml)
 	
 	//analyse the file to know contructor, instrument and instrument type
 	filestruct = analyze.AnalyzeFile(cfg,files)
@@ -60,6 +60,9 @@ func main() {
 		//case constructor == seabird
 		case filestruct.Constructeur.Number == 0 :
 			seabird.ReadSeabird(&nc,&m,filestruct,cfg,files,optCfgfile,optAll,optDebug,prefixAll)
+		//case constructor == IFM-GEOMAR
+		case filestruct.Constructeur.Number == 1 :
+			ifm.Read(&nc,&m,filestruct,cfg,files,optCfgfile,optAll,optDebug,prefixAll)
 		}
 	
 }

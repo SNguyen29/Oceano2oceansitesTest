@@ -5,7 +5,7 @@ progversion = "0.1.0"
 
 roscopfile = "roscop/code_roscop.csv"
 
-outputfile = "output/"
+outputfile = "../output/"
 
 profil 		= "profile"
 timeserie 	= "time-series"
@@ -29,13 +29,12 @@ endDate     = "23/08/2015"
 creator     = "Jacques.Grelet@ird.fr"
 
 [instrument]
-constructor		= ["Seabird",""]
-tabprofil 		= ["CTD","BTL"]
+constructor		= ["Seabird","IFM-GEOMAR"]
+tabprofil 		= ["CTD","BTL","LADCP"]
 tabtimeserie	= [""]
 tabtrajectoire	= [""]
-type 			= ["CTD","BTL"]
-decodetype		= ['(\*END\*)','^\s+(Bottle)']
-
+type 			= ["CTD","BTL","LADCP"]
+decodetype		= ['(\*END\*)','^\s+(Bottle)','[a-z]*=[a-z]*']
 
 [ctd]
 cruisePrefix   			= "csp"
@@ -53,6 +52,15 @@ titleSummary  		= "Water sample during PIRATA-FR25 cruise with 11 levels"
 comment        		= "CTD bottles water sampling with temperature, salinity and oxygen from primary and secondary sensors"
 split 				= ["BOTL","1","PSA1","5","PSA2","6","DO11","7","DO21","8","PRES","14","DEPTH","15"]
 
+[ladcp]
+cruisePrefix   		 = "csp"
+stationPrefixLength  = 3
+typeInstrument       = "WH300"
+instrumentNumber     = "12818"
+titleSummary   		 = "IFM-GEOMAR/LDEO Matlab LADCP-Processing system adapted by FM/JG"
+comment        		 = "Extract from .lad files"
+split				 = ["PRES","1","DEPTH","2","EWCT","3","NSCT","4"]
+
 # this is string for decode Seabird 
 [Seabird]
 prefix 				= 'cruisePrefix\s*=\s*(.*)'
@@ -69,3 +77,12 @@ hour 				= '[Heure|Hour]\s*:\s*(\d+)[:hH](\d+):(\d+)'
 systemTime 			= 'System UpLoad Time =\s+(.*)'
 latitude 			= 'NMEA Latitude\s*=\s*(\d+\s+\d+.\d+\s+\w)'
 longitude 			= 'NMEA Longitude\s*=\s*(\d+\s+\d+.\d+\s+\w)'
+
+# this is string for decode IFM 
+[IFM]
+header 				= '[a-z]*=[a-z]*'
+date				= 'Date\s*=\s*(\d+)/\s*(\d+)/\s*(\d+)'
+startTime 			= 'Start_Time\s*=\s+(.*)'
+proceedTime			= 'Processed\s*=\s+(.*)'
+latitude 			= 'Latitude\s*=\s*(-?\d+\.\d+)'
+longitude 			= 'Longitude\s*=\s*(-?\d+\.\d+)'

@@ -18,7 +18,7 @@ func AnalyzeFile(cfg toml.Configtoml,files []string) Structfile{
 	
 	result.Constructeur = AnalyzeConstructor(cfg,files)
 	
-	result.Instrument = AnalyzeTypeSeabird(cfg,files)
+	result.Instrument = AnalyzeType(cfg,files)
 	
 	result.TypeInstrument = AnalyzeTypeInstrument(cfg,result.Instrument)
 	

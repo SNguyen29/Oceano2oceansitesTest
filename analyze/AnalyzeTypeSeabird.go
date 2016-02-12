@@ -11,7 +11,7 @@ import (
 )
 
 // read all cnv files and return dimensions
-func AnalyzeTypeSeabird(cfg toml.Configtoml,files []string) string {
+func AnalyzeType(cfg toml.Configtoml,files []string) string {
 
 	var result = "error in analyse type"
 	

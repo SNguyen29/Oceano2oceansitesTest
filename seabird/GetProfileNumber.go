@@ -7,16 +7,9 @@ import (
 	"log"
 	"strconv"
 	"strings"
-	"io"
-	"io/ioutil"
 	"Oceano2oceansitesTest/lib"
 	"Oceano2oceansitesTest/toml"
 )
-
-// use for debug mode
-var debug io.Writer = ioutil.Discard
-// use for echo mode
-var echo io.Writer = ioutil.Discard
 
 func GetProfileNumber(nc *lib.Nc,cfg toml.Configtoml,str string) float64 {
 	var value float64

@@ -45,7 +45,7 @@ func GetConfigBTL(nc *lib.Nc,m *Map,cfg toml.Configtoml,configFile string,Type s
 	nc.Variables_1D["BATH"] = []float64{}
 	nc.Variables_1D["TYPECAST"] = []float64{}
 	nc.Variables_1D["TYPECAST"] = append(nc.Variables_1D["TYPECAST"].([]float64),0)
-	nc.Roscop = roscop.CodeRoscopFromCsv(cfg.Roscopfile)
+	nc.Roscop = roscop.NewRoscop(cfg.Roscopfile)
 
 	// add some global attributes for profile, change in future
 	nc.Attributes["data_type"] = Type
@@ -92,7 +92,7 @@ func GetConfigBTL(nc *lib.Nc,m *Map,cfg toml.Configtoml,configFile string,Type s
 
 	// fill map_format from code_roscop
 	for _, key := range m.Hdr {
-		m.Map_format[key] = roscop.GetRoscopformat(nc.Roscop[key])
+		m.Map_format[key] = nc.Roscop.GetAttributesM(key,"format")
 	}
 	//return nc
 }

@@ -1,5 +1,7 @@
-// writeAsciiBtl
-package seabird
+// writeAscii.go
+//func writes Ascii file for IFM constructor
+
+package ifm
 
 import (
 	"bufio"
@@ -9,18 +11,14 @@ import (
 	"strings"
 	"Oceano2oceansitesTest/lib"
 	"Oceano2oceansitesTest/toml"
-	
+
 )
 
-func WriteAsciiBTL(nc *lib.Nc,map_format map[string]string, hdr []string,cfg toml.Configtoml) {
-	fmt.Println("Hello from WriteAscii for bottle !")
-}
+const (
+	codeForProfile = -1
+)
 
-func WriteHeader(nc *lib.Nc,map_format map[string]string, hdr []string) {
-	fmt.Println("Hello from WriteHeader for bootle !")
-}
-
-func WriteAsciiBTL2(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr []string, inst string,prefixAll string) {
+func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr []string, inst string,prefixAll string) {
 	// define 2 files, profiles header and data
 	var asciiFilename string
 
@@ -72,10 +70,10 @@ func WriteAsciiBTL2(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string,
 	str = ""
 	for _, key := range hdr {
 		fmt.Fprintf(fbuf_ascii, "%s   ", key)
-		fmt.Fprintf(debug, "%s   ", key)
+		fmt.Fprintf(lib.Debug, "%s   ", key)
 	}
 	// append new line
-	//fmt.Fprintln(fbuf_ascii, "\n")
+	fmt.Fprintln(fbuf_ascii, "\n")
 
 	// write second line header on ascii file
 	fmt.Fprintln(fbuf_ascii, str)
@@ -90,35 +88,30 @@ func WriteAsciiBTL2(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string,
 	lat := nc.Variables_1D["LATITUDE"].([]float64)
 	lon := nc.Variables_1D["LONGITUDE"].([]float64)
 	profile := nc.Variables_1D["PROFILE"].([]float64)
-	bath := nc.Variables_1D["BATH"].([]float64)
 
 	// loop over each profile
 	for x := 0; x < len_1D; x++ {
 		str = ""
+		t1 := lib.NewTimeFromJulian(time[x])
 		// write profile informations to ASCII data file with DEPTH = -1
-		t1 := NewTimeFromJulian(time[x])
-		t2 := NewTimeFromJulianDay(nc.Extras_f[fmt.Sprintf("ETDD:%d", int(profile[x]))], t1)
 		// TODOS: adapt profile format to stationPrefixLength
-		fmt.Fprintf(fbuf_ascii, "%05.0f %4d %f %f %f %s",
+		fmt.Fprintf(fbuf_ascii, "%05.0f %f %f %f ",
 			profile[x],
-			codeForProfile,
 			t1.JulianDayOfYear(),
 			lat[x],
 			lon[x],
 			t1.Format("20060102150405"))
 
-		// write profile informations to header file, max depth CTD and
-		// bathymetrie are in meters
-		str = fmt.Sprintf("%05.0f %s %s %s %s %4.4g %4.4g %s %s %s\n",
+		// write profile informations to header file
+		str = fmt.Sprintf("%05.0f %s  %s %s %4.4g %4.4g %s %s\n",
 			profile[x],
 			t1.Format("02/01/2006 15:04:05"),
-			t2.Format("02/01/2006 15:04:05"),
-			DecimalPosition2String(lat[x], 0),
-			DecimalPosition2String(lon[x], 0),
-			nc.Extras_f[fmt.Sprintf("DEPTH:%d", int(profile[x]))],
-			bath[x],
-			nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile[x]))],
-			cfg.Ctd.CruisePrefix+nc.Extras_s[fmt.Sprintf("PRFL_NAME:%d", int(profile[x]))])
+			lib.DecimalPosition2String(lat[x], 0),
+			lib.DecimalPosition2String(lon[x], 0),
+			nc.Extras_f[fmt.Sprintf("MINPRES:%d", int(profile[x]))],
+			nc.Extras_f[fmt.Sprintf("PRES:%d", int(profile[x]))],
+			nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile[x]))],	
+			cfg.Ladcp.CruisePrefix+nc.Extras_s[fmt.Sprintf("PRFL_NAME:%d", int(profile[x]))])
 
 		// write profile information to header file
 		fmt.Fprintf(fbuf_hdr, str)
@@ -134,11 +127,7 @@ func WriteAsciiBTL2(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string,
 
 		// loop over each level
 		for y := 0; y < len_2D; y++ {
-			// goto next profile when max depth reach
-			if lib.GetData(nc.Variables_2D["PRES"])[x][y] >=
-				nc.Extras_f[fmt.Sprintf("PRES:%d", int(profile[x]))] {
-				continue
-			}
+			
 			fmt.Fprintf(fbuf_ascii, "%05.0f ", profile[x])
 			// loop over each physical parameter (key) in the rigth order
 			for _, key := range hdr {

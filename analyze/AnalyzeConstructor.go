@@ -37,6 +37,9 @@ func AnalyzeConstructor(cfg toml.Configtoml,files []string) Constructor {
 		case strings.ContainsAny(cfg.Instrument.Constructor[0],str) : 
 			result.Name = cfg.Instrument.Constructor[0]
 			result.Number = 0
+		case strings.ContainsAny(cfg.Instrument.Constructor[1],str) : 
+			result.Name = cfg.Instrument.Constructor[1]
+			result.Number = 1
 		}
 	}
 	return result

@@ -33,7 +33,7 @@ func ReadSeabird(nc *lib.Nc, m *config.Map,filestruct analyze.Structfile,cfg tom
 			// second pass, read files again, extract data and fill slices
 			secondPassCTD(nc,m,cfg,files,optDebug)
 			// write ASCII file
-			WriteAsciiCTD(nc,cfg,m.Map_format, m.Hdr,filestruct.Instrument,prefixAll)
+			WriteAscii(nc,cfg,m.Map_format, m.Hdr,filestruct.Instrument,prefixAll)
 		
 			// write netcdf file
 			//if err := nc.WriteNetcdf(); err != nil {
@@ -56,12 +56,12 @@ func ReadSeabird(nc *lib.Nc, m *config.Map,filestruct analyze.Structfile,cfg tom
 			// second pass, read files again, extract data and fill slices
 			secondPassBTL(nc,m,cfg,files,optDebug)
 			// write ASCII file
-			//WriteAsciiBTL2(nc,m.Map_format, m.Hdr,filestruct.Instrument)
+			WriteAscii(nc,cfg,m.Map_format, m.Hdr,filestruct.Instrument,prefixAll)
 		
 			// write netcdf file
 			//if err := nc.WriteNetcdf(); err != nil {
 			//log.Fatal(err)
 			//}
-			netcdf.WriteNetcdf(nc,m,cfg,filestruct.Instrument,prefixAll)
+			//netcdf.WriteNetcdf(nc,m,cfg,filestruct.Instrument,prefixAll)
 			}
 }

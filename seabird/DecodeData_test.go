@@ -8,6 +8,8 @@ import (
 	"os"
 	"bufio"
 	"fmt"
+	"Oceano2oceansitesTest/lib"
+	"Oceano2oceansitesTest/config"
 )
 
 
@@ -15,12 +17,14 @@ import (
 func TestDecodeData(t *testing.T){
 // variable for test
 
-var ncTest Nc
-ncTest.TestInitNC()
+var ncTest lib.Nc
+var m config.Map
+
+m = config.InitMap()
 
 fmt.Println("Debut fichier CTD :")
 
-TestFile := "data/FileTestDecodeData.cnv"
+TestFile := "../data/FileTestDecodeData.cnv"
 
 var profileTest float64 = 00101
 
@@ -35,15 +39,15 @@ var profileTest float64 = 00101
 	scanner := bufio.NewScanner(fid)
 	for scanner.Scan() {
 		str := scanner.Text()
-		ncTest.DecodeDataSeabird(str,profileTest,TestFile,line)
+		DecodeData(&ncTest,&m,str,profileTest,TestFile,line)
 		line++
 	}
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
-
+fmt.Println("Number of line : ",line)
 fmt.Println("Debut fichier BTL :")
-TestFile2 := "data/FileTestDecodeData2.btl"
+TestFile2 := "../data/FileTestDecodeData2.btl"
 
 var profileTest2 float64 = 00101
 
@@ -58,10 +62,11 @@ var profileTest2 float64 = 00101
 	scanner2 := bufio.NewScanner(fid2)
 	for scanner2.Scan() {
 		str2 := scanner2.Text()
-		ncTest.DecodeDataSeabird(str2,profileTest2,TestFile2,line2)
+		DecodeData(&ncTest,&m,str2,profileTest2,TestFile2,line2)
 		line2++
 	}
 	if err2 := scanner2.Err(); err2 != nil {
 		log.Fatal(err2)
 	}
+	fmt.Println("Number of line : ",line2)
 }
