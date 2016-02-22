@@ -12,6 +12,8 @@ import (
 	"Oceano2oceansitesTest/analyze"
 	"Oceano2oceansitesTest/seabird"
 	"Oceano2oceansitesTest/ifm"
+	"Oceano2oceansitesTest/thecsas"
+	"Oceano2oceansitesTest/mk21"
 	
 ) 
 
@@ -63,6 +65,12 @@ func main() {
 		//case constructor == IFM-GEOMAR
 		case filestruct.Constructeur.Number == 1 :
 			ifm.Read(&nc,&m,filestruct,cfg,files,optCfgfile,optAll,optDebug,prefixAll)
+		//case constructor == THECSAS
+		case filestruct.Constructeur.Number == 2 :
+			thecsas.Read(&nc,&m,filestruct,cfg,files,optCfgfile,optAll,optDebug,prefixAll)
+		//case constructor == MK21
+		case filestruct.Constructeur.Number == 3 :
+			mk21.Read(&nc,&m,filestruct,cfg,files,optCfgfile,optAll,optDebug,prefixAll)
 		}
 	
 }

@@ -72,6 +72,32 @@ type Configtoml struct{
 		Comment        		string
 		Split				[]string
 	}
+	
+	Xbt struct{
+		CruisePrefix   		string 
+		AcquisitionSoftware string
+		AcquisitionVersion 	string 
+		TypeInstrument    	string
+		InstrumentNumber   	string
+		TitleSummary   		string
+		Comment        		string
+		Split 				[]string
+	}
+	
+	Thermo struct{
+		CruisePrefix		string
+		AcquisitionSoftware string
+		TypeInstrument      string
+		InstrumentNumber    string
+		CalDate        		string 
+		ExternalType   		string
+		ExternalSn     		string
+		ExternalCalDate 	string
+		DepthIntake    		string
+		TitleSummary   		string
+		Comment        		string
+		Split				[]string
+	}
 		
 	Seabird struct{
 		Prefix				string
@@ -94,6 +120,19 @@ type Configtoml struct{
 		Header				string
 		Date 				string
 		StartTime 			string
+		Latitude 			string
+		Longitude 			string
+		}
+	
+	Thecsas struct{
+		Header				string
+		Data				string
+		}
+		
+	Mk21 struct{
+		Header				string
+		Date 				string
+		Time 				string
 		Latitude 			string
 		Longitude 			string
 		}

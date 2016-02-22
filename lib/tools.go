@@ -214,3 +214,14 @@ func ConvertDate(s string) string{
 	
 	return m+" "+days+" "+year+" "+hour+":"+minute+":"+seconde
 	}
+
+// convert position "DD MM.SSP" to decimal position
+func Position3Decimal(pos string) (float64, error) {
+	
+	lenght := len(pos)
+	list := strings.Split(pos,string(pos[lenght-1]))
+	res := list[0] +" "+string(pos[lenght-1])
+	fmt.Println(res)
+	
+	return Position2Decimal(res)
+}

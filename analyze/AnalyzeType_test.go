@@ -36,5 +36,16 @@ Type3 := AnalyzeType(cfg,TestFile3)
 
 fmt.Println("Type = "+Type3)
 
+TestFile4 := []string{"../data/20150718-114047-AT_COLCOR.COLCOR"}
+	
+Type4 := AnalyzeType(cfg,TestFile4)
+
+fmt.Println("Type = "+Type4)
+
+TestFile5 := []string{"../data/T7_00001.EDF"}
+	
+Type5 := AnalyzeType(cfg,TestFile5)
+
+fmt.Println("Type = "+Type5)
 
 }

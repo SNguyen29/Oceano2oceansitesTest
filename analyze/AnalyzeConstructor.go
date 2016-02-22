@@ -6,7 +6,7 @@ import (
 	"bufio"
 	"log"
 	"os"
-	"strings"
+	"regexp"
 	"Oceano2oceansitesTest/toml"
 )
 
@@ -20,6 +20,12 @@ type Constructor struct{
 
 // read all cnv files and return dimensions
 func AnalyzeConstructor(cfg toml.Configtoml,files []string) Constructor {
+	
+	regseabirdcnv := regexp.MustCompile(cfg.Instrument.Decodetype[0])
+	regseabirdbtl := regexp.MustCompile(cfg.Instrument.Decodetype[1])
+	regifm := regexp.MustCompile(cfg.Instrument.Decodetype[2])
+	regseabirdthermo := regexp.MustCompile(cfg.Instrument.Decodetype[3])
+	regmk21xbt := regexp.MustCompile(cfg.Instrument.Decodetype[4])
 
 	var result Constructor
 	// open first file
@@ -34,12 +40,21 @@ func AnalyzeConstructor(cfg toml.Configtoml,files []string) Constructor {
 		str := scanner.Text()
 		
 		switch {
-		case strings.ContainsAny(cfg.Instrument.Constructor[0],str) : 
+		case regseabirdcnv.MatchString(str) || regseabirdbtl.MatchString(str): 
 			result.Name = cfg.Instrument.Constructor[0]
 			result.Number = 0
-		case strings.ContainsAny(cfg.Instrument.Constructor[1],str) : 
+			
+		case regifm.MatchString(str) : 
 			result.Name = cfg.Instrument.Constructor[1]
 			result.Number = 1
+			
+		case regseabirdthermo.MatchString(str) : 
+			result.Name = cfg.Instrument.Constructor[2]
+			result.Number = 2
+		
+		case regmk21xbt.MatchString(str) : 
+			result.Name = cfg.Instrument.Constructor[3]
+			result.Number = 3
 		}
 	}
 	return result
