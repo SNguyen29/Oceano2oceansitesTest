@@ -18,10 +18,13 @@ before_install:
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew install netcdf; fi
   - go get github.com/fhs/go-netcdf/netcdf
   - go get github.com/pborman/getopt
+  - go get github.com/BurntSushi/toml
+
 
 install :
   - go install github.com/fhs/go-netcdf/netcdf
   - go install github.com/pborman/getopt
+  - go install github.com/BurntSushi/toml
   - go install -v ../Oceano2oceansitesTest/toml
   - go install -v ../Oceano2oceansitesTest/roscop
   - go install -v ../Oceano2oceansitesTest/lib
