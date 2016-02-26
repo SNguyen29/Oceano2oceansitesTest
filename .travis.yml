@@ -16,8 +16,9 @@ before_install:
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew tap homebrew/science; fi
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew update; fi
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew install netcdf; fi
+  - echo $GOPATH
 
-install :
+package :
   - go install -v ./... Oceano2oceansitesTest/ifm
  
 script:
