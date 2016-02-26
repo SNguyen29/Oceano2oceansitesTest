@@ -16,7 +16,10 @@ before_install:
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew tap homebrew/science; fi
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew update; fi
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew install netcdf; fi
-  
+
+install :
+  - go install -v ./... ifm 
+ 
 script:
   - go install -v GOPATH/src/github.com/user/repo
   - ls
