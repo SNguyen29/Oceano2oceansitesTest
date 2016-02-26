@@ -33,4 +33,4 @@ before_install:
 
  
 script:
-  - go build -i
+  - go build 
