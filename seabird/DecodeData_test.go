@@ -24,7 +24,7 @@ m = config.InitMap()
 
 fmt.Println("Debut fichier CTD :")
 
-TestFile := "../data/FileTestDecodeData.cnv"
+TestFile := "../data/FileTestDecodeData.TEST"
 
 var profileTest float64 = 00101
 
@@ -47,7 +47,7 @@ var profileTest float64 = 00101
 	}
 fmt.Println("Number of line : ",line)
 fmt.Println("Debut fichier BTL :")
-TestFile2 := "../data/FileTestDecodeData2.btl"
+TestFile2 := "../data/FileTestDecodeData2.TEST"
 
 var profileTest2 float64 = 00101
 

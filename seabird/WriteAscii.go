@@ -1,4 +1,5 @@
 // writeAscii.go
+
 package seabird
 
 import (
@@ -19,6 +20,8 @@ const (
 func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr []string, inst string,prefixAll string) {
 	// define 2 files, profiles header and data
 	var asciiFilename string
+	var depth string
+	var depth1 string
 
 	// build filenames
 	str := nc.Attributes["cycle_mesure"]
@@ -86,7 +89,6 @@ func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr
 	lat := nc.Variables_1D["LATITUDE"].([]float64)
 	lon := nc.Variables_1D["LONGITUDE"].([]float64)
 	profile := nc.Variables_1D["PROFILE"].([]float64)
-	bath := nc.Variables_1D["BATH"].([]float64)
 
 	// loop over each profile
 	for x := 0; x < len_1D; x++ {
@@ -102,7 +104,15 @@ func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr
 			lat[x],
 			lon[x],
 			t1.Format("20060102150405"))
-
+		
+		if inst == "BTL"{
+			depth = "MinBOTL"
+			depth1 = "BOTL"
+		}else{
+			depth = "DEPTH"
+			depth1 = "PRES"
+		}		
+		
 		// write profile informations to header file, max depth CTD and
 		// bathymetrie are in meters
 		str = fmt.Sprintf("%05.0f %s %s %s %s %4.4g %4.4g %s %s\n",
@@ -111,8 +121,8 @@ func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr
 			t2.Format("02/01/2006 15:04:05"),
 			lib.DecimalPosition2String(lat[x], 0),
 			lib.DecimalPosition2String(lon[x], 0),
-			nc.Extras_f[fmt.Sprintf("DEPTH:%d", int(profile[x]))],
-			bath[x],
+			nc.Extras_f[fmt.Sprintf(depth+":%d", int(profile[x]))],
+			nc.Extras_f[fmt.Sprintf(depth1+":%d", int(profile[x]))],
 			nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile[x]))],	
 			cfg.Ctd.CruisePrefix+nc.Extras_s[fmt.Sprintf("PRFL_NAME:%d", int(profile[x]))])
 
@@ -128,11 +138,17 @@ func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr
 		}
 		fmt.Fprintln(fbuf_ascii) // add newline
 
+		if inst == "BTL"{
+			depth = "BOTL"
+		}else{
+			depth = "PRES"
+		}	
+		
 		// loop over each level
 		for y := 0; y < len_2D; y++ {
 			// goto next profile when max depth reach
-			if lib.GetData(nc.Variables_2D["PRES"])[x][y] >=
-				nc.Extras_f[fmt.Sprintf("PRES:%d", int(profile[x]))] {
+			if lib.GetData(nc.Variables_2D[depth])[x][y] >=
+				nc.Extras_f[fmt.Sprintf(depth+":%d", int(profile[x]))] {
 				continue
 			}
 			fmt.Fprintf(fbuf_ascii, "%05.0f ", profile[x])
@@ -146,7 +162,14 @@ func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr
 					if data == 1e36 {
 						fmt.Fprintf(fbuf_ascii, "%g ", data)
 					} else {
-						fmt.Fprintf(fbuf_ascii, map_format[key]+" ", data)
+						if strings.ContainsAny(map_format[key],"lf"){
+								res := strings.Split(map_format[key],"l")
+								map_format[key] = strings.Join(res,"")
+							}
+						if key == "BOTL"{
+							fmt.Fprintf(fbuf_ascii, map_format[key]+" ", int(data))
+							}else{
+						fmt.Fprintf(fbuf_ascii, map_format[key]+" ", data)}
 					}
 				}
 			}

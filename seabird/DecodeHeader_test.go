@@ -12,16 +12,13 @@ func TestDecodeHeader(t *testing.T){
 // variable for test
 
 var cfg toml.Configtoml
-var fileconfig string
 var ncTest lib.Nc
 var optDebug *bool
 fileconfigTest := "../configfile/configtoml.toml"	
 
-fileconfig,cfg = toml.InitToml(fileconfigTest)
+cfg = toml.InitToml(fileconfigTest)
 
-fmt.Println("fileconfig ",fileconfig)
-
-ncTest.Dimensions = make(map[string]int)
+	ncTest.Dimensions = make(map[string]int)
 	ncTest.Attributes = make(map[string]string)
 	ncTest.Extras_f = make(map[string]float64)
 	ncTest.Extras_s = make(map[string]string)

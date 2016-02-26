@@ -34,7 +34,7 @@ tabprofil 		= ["CTD","BTL","LADCP","XBT"]
 tabtimeserie	= [""]
 tabtrajectoire	= ["THERMO"]
 type 			= ["CTD","BTL","LADCP","THERMO","XBT"]
-decodetype		= ['(\*END\*)','^\s+(Bottle)','[a-z]*=[a-z]*','(ATCOR)','(MK21)']
+decodetype		= ['(\*END\*)','^\s+(Bottle)','(LADCP)','(ATCOR)','(MK21)']
 
 [ctd]
 cruisePrefix   			= "csp"
@@ -62,7 +62,7 @@ comment        		 = "Extract from .lad files"
 split				 = ["PRES","1","DEPTH","2","EWCT","3","NSCT","4"]
 
 [thermo]
-cruisePrefix   	= "csp"
+cruisePrefix   	= "AT_COLCOR"
 acquisitionSoftware = "THECSAS"
 typeInstrument  = "SBE21"
 instrumentNumber= "3223"
@@ -73,7 +73,7 @@ externalCalDate = "19/04/2011"
 depthIntake    	= "4"
 titleSummary   	= "Thermosalinograph data acquired with Seabird SBE21 instrument and reduce with THECSAS/COLCOR"
 comment        	= "Extract from .colcor files"
-split			= ["SSTP","19","SSJT","20","CNDC","21","SSPS","22"]
+split			= ["LAT","6","LONG","9","SSTP","19","SSJT","20","CNDC","21","SSPS","22"]
 
 [xbt]
 cruisePrefix   = "T7_" 
@@ -89,6 +89,8 @@ split 			= ["DEPTH","1","TEMP","2","SVEL","3"]
 [Seabird]
 prefix 				= 'cruisePrefix\s*=\s*(.*)'
 header 				= '^[*#]'
+headerBTL			= '[Bottle]'
+headerBTL2			= '[Position]'
 cruise 				= 'Cruise\s*:\s*(.*)'
 ship 				= 'Ship\s*:\s*(.*)'
 station 			= 'Station\s*:\s*\D*(\d*)'
@@ -110,10 +112,9 @@ startTime 			= 'Start_Time\s*=\s+(.*)'
 latitude 			= 'Latitude\s*=\s*(-?\d+\.\d+)'
 longitude 			= 'Longitude\s*=\s*(-?\d+\.\d+)'
 
-# this is string for decode THECSAS 
+# this is string for decode THECSAS change this for different cruise
 [THECSAS]
-header				= '^\#\$ATCOR'
-data 				= '^\$PIFM,ATCOR'
+data 				= '^\$PIFM,ATCOR' 
 
 # this is string for decode MK21 
 [MK21]

@@ -53,8 +53,6 @@ func GetConfigBTL(nc *lib.Nc,m *Map,cfg toml.Configtoml,configFile string,Type s
 
 			split = cfg.Btl.Split
 
-		//		cruisePrefix = cfg.Ctd.CruisePrefix
-		//		stationPrefixLength = cfg.Ctd.StationPrefixLength
 		// TODOS: complete
 		nc.Attributes["cycle_mesure"] = cfg.Cruise.CycleMesure
 		nc.Attributes["plateforme"] = cfg.Cruise.Plateforme

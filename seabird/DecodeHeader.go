@@ -52,7 +52,6 @@ func  DecodeHeader(nc *lib.Nc,cfg toml.Configtoml,str string, profile float64,op
 		case regNmeaLongitude.MatchString(str) :
 			if v, err := lib.Position2Decimal(str); err == nil {
 				nc.Variables_1D["LONGITUDE"] = append(nc.Variables_1D["LONGITUDE"].([]float64), v)
-				fmt.Println(v)
 			} else {
 				nc.Variables_1D["LONGITUDE"] = append(nc.Variables_1D["LONGITUDE"].([]float64), 1e36)
 			}
@@ -61,7 +60,6 @@ func  DecodeHeader(nc *lib.Nc,cfg toml.Configtoml,str string, profile float64,op
 		case regCruise.MatchString(str) :
 			res := regCruise.FindStringSubmatch(str)
 			value := res[1]
-			fmt.Println(value)
 			fmt.Fprintln(lib.Debug, value)
 			nc.Attributes["cycle_mesure"] = value
 
@@ -70,7 +68,6 @@ func  DecodeHeader(nc *lib.Nc,cfg toml.Configtoml,str string, profile float64,op
 			value := res[1]
 			fmt.Fprintln(lib.Debug, value)
 			nc.Attributes["plateforme"] = value
-			fmt.Println(value)
 			
 		case regStation.MatchString(str) :
 			res := regStation.FindStringSubmatch(str)
@@ -101,7 +98,6 @@ func  DecodeHeader(nc *lib.Nc,cfg toml.Configtoml,str string, profile float64,op
 				fmt.Fprintf(lib.Debug, "Bath: %f\n", v)
 				nc.Variables_1D["BATH"] = append(nc.Variables_1D["BATH"].([]float64), 1e36)
 			}
-			fmt.Println(value)
 			
 		case regDummyBottomDepth.MatchString(str) ://?
 			nc.Variables_1D["BATH"] = append(nc.Variables_1D["BATH"].([]float64), 1e36)
@@ -111,10 +107,7 @@ func  DecodeHeader(nc *lib.Nc,cfg toml.Configtoml,str string, profile float64,op
 		case regOperator.MatchString(str) :
 			res := regOperator.FindStringSubmatch(str)
 			value := res[1]
-			if *optDebug {
-				fmt.Println(value)
-			}
-			fmt.Println(value)
+			nc.Attributes["operator"] = value
 	
 	// TODOS: uncomment, add optionnal value from seabird header	
 			
@@ -132,7 +125,6 @@ func  DecodeHeader(nc *lib.Nc,cfg toml.Configtoml,str string, profile float64,op
 			default:
 				v = float64(lib.UNKNOW)
 			}
-			fmt.Println(value, v)
 			nc.Variables_1D["TYPECAST"] = append(nc.Variables_1D["TYPECAST"].([]float64), v)
 
 			nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile))] = value

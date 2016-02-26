@@ -17,12 +17,12 @@ import (
 func Read(nc *lib.Nc, m *config.Map,filestruct analyze.Structfile,cfg toml.Configtoml,files []string,optCfgfile string,optAll *bool,optDebug *bool,prefixAll string) {
 	
 	switch{
-		case filestruct.Instrument == cfg.Instrument.Type[2] :
+		case filestruct.Instrument == cfg.Instrument.Type[3] :
 		
-			config.GetConfigLADCP(nc,m,cfg,optCfgfile,filestruct.TypeInstrument,optAll)
+			config.GetConfigTHERMO(nc,m,cfg,optCfgfile,filestruct.TypeInstrument,optAll)
 			
 			// first pass, return dimensions fron cnv files
-			nc.Dimensions["TIME"], nc.Dimensions["DEPTH"] = firstPassLADCP(nc,m,cfg,files)
+			nc.Dimensions["TIME"], nc.Dimensions["DEPTH"] = firstPassTHERMO(nc,m,cfg,files)
 		
 			// initialize 2D data
 			nc.Variables_2D = make(lib.AllData_2D)
@@ -31,7 +31,7 @@ func Read(nc *lib.Nc, m *config.Map,filestruct analyze.Structfile,cfg toml.Confi
 			}
 		
 			// second pass, read files again, extract data and fill slices
-			secondPassLADCP(nc,m,cfg,files,optDebug)
+			secondPassTHERMO(nc,m,cfg,files,optDebug)
 			// write ASCII file
 			WriteAscii(nc,cfg,m.Map_format, m.Hdr,filestruct.Instrument,prefixAll)
 		

@@ -22,9 +22,9 @@ func TestFirstPass(t *testing.T){
 	ncTest.Extras_s = make(map[string]string)
 	ncTest.Extras_f = make(map[string]float64)
 	
-	TestFile := []string{"../data/csp00201.lad"}
+	TestFile := []string{"../data/20150718-114047-AT_COLCOR.COLCOR"}
 	
-	time,depth := firstPassLADCP(&ncTest,&m,cfg,TestFile)
+	time,depth := firstPassTHERMO(&ncTest,&m,cfg,TestFile)
 	
 	fmt.Println("Time : ",time)
 	fmt.Println("Depth : ",depth)
@@ -50,12 +50,14 @@ func TestSecondPass(t *testing.T){
 	ncTest.Variables_1D["LONGITUDE"] = []float64{}
 	ncTest.Variables_1D["PROFILE"] = []float64{}
 	
-	TestFile := []string{"../data/csp00201.lad"}
+	profile := GetProfileNumber(&ncTest,0)
 	
-	secondPassLADCP(&ncTest,&m,cfg,TestFile,optDebug)
+	TestFile := []string{"../data/20150718-114047-AT_COLCOR.COLCOR"}
 	
-	fmt.Println("Time :",ncTest.Variables_1D["TIME"])
-	fmt.Println("Latitude :",ncTest.Variables_1D["LATITUDE"])
-	fmt.Println("Longitude :",ncTest.Variables_1D["LONGITUDE"])
+	secondPassTHERMO(&ncTest,&m,cfg,TestFile,optDebug)
+	
+	fmt.Println("Time start :",ncTest.Extras_s[fmt.Sprintf("Starttime:%d", int(profile))])
+	fmt.Println("Latitude start :",ncTest.Extras_s[fmt.Sprintf("Startlatpos:%d", int(profile))])
+	fmt.Println("Longitude start :",ncTest.Extras_s[fmt.Sprintf("Startlongpos:%d", int(profile))])
 	
 	}

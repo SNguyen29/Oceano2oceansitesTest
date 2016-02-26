@@ -25,7 +25,7 @@ m = config.InitMap()
 
 fmt.Println("Debut fichier XBT :")
 
-TestFile := "../data/FileTestDecodeData4.EDF"
+TestFile := "../data/FileTestDecodeData4.TEST"
 
 var profileTest float64 = 00001
 

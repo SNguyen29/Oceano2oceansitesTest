@@ -1,5 +1,5 @@
 // GetProfileNumber.go
-//Function for get the profil number of a data file for Seabird Constructor
+//Function for get the profil number of a data file for seabird Constructor
 package seabird
 
 import (

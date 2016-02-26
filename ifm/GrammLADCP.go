@@ -83,6 +83,7 @@ func firstPassLADCP(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string)
 		nc.Extras_f[fmt.Sprintf("PRES:%d", int(profile))] = maxPres
 		nc.Extras_f[fmt.Sprintf("DEPTH:%d", int(profile))] = math.Floor(maxDepth)
 		nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile))] = "UNKNOW"
+		nc.Variables_1D["TYPECAST"] = append(nc.Variables_1D["TYPECAST"].([]float64), 0)
 		if maxPres > maxPresAll {
 			maxPresAll = maxPres
 		}

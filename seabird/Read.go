@@ -47,11 +47,11 @@ func ReadSeabird(nc *lib.Nc, m *config.Map,filestruct analyze.Structfile,cfg tom
 			// first pass, return dimensions fron btl files
 			nc.Dimensions["TIME"], nc.Dimensions["DEPTH"] = firstPassBTL(nc,m,cfg,files)
 		
-			//	// initialize 2D data
-			//	nc.Variables_2D = make(AllData_2D)
-			//	for i, _ := range map_var {
-			//		nc.Variables_2D.NewData_2D(i, nc.Dimensions["TIME"], nc.Dimensions["DEPTH"])
-			//	}
+			// initialize 2D data
+			nc.Variables_2D = make(lib.AllData_2D)
+			for i, _ := range m.Map_var {
+				nc.Variables_2D.NewData_2D(i, nc.Dimensions["TIME"], nc.Dimensions["DEPTH"])
+			}
 		
 			// second pass, read files again, extract data and fill slices
 			secondPassBTL(nc,m,cfg,files,optDebug)
@@ -62,6 +62,6 @@ func ReadSeabird(nc *lib.Nc, m *config.Map,filestruct analyze.Structfile,cfg tom
 			//if err := nc.WriteNetcdf(); err != nil {
 			//log.Fatal(err)
 			//}
-			//netcdf.WriteNetcdf(nc,m,cfg,filestruct.Instrument,prefixAll)
+			netcdf.WriteNetcdf(nc,m,cfg,filestruct.Instrument,prefixAll)
 			}
 }

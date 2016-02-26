@@ -95,7 +95,7 @@ func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr
 		t1 := lib.NewTimeFromJulian(time[x])
 		// write profile informations to ASCII data file with DEPTH = -1
 		// TODOS: adapt profile format to stationPrefixLength
-		fmt.Fprintf(fbuf_ascii, "%05.0f %f %f %f ",
+		fmt.Fprintf(fbuf_ascii, "%05.0f %f %f %f %s",
 			profile[x],
 			t1.JulianDayOfYear(),
 			lat[x],
@@ -139,6 +139,10 @@ func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr
 					if data == 1e36 {
 						fmt.Fprintf(fbuf_ascii, "%g ", data)
 					} else {
+						if strings.ContainsAny(map_format[key],"lf"){
+								res := strings.Split(map_format[key],"l")
+								map_format[key] = strings.Join(res,"")
+							}
 						fmt.Fprintf(fbuf_ascii, map_format[key]+" ", data)
 					}
 				}

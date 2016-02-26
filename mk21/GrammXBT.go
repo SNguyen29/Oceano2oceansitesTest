@@ -31,11 +31,12 @@ func firstPassXBT(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (
 	var minDepth float64 = 0
 	var line int = 0
 	var maxLine int = 0
-	var Etat bool = false
-	
+
 	fmt.Fprintf(lib.Echo, "First pass: ")
 	// loop over each files passed throw command line
 	for _, file := range files {
+		var Etat bool = false
+		fmt.Println(file)
 		fid, err := os.Open(file)
 		if err != nil {
 			log.Fatal(err)
@@ -80,6 +81,7 @@ func firstPassXBT(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string) (
 		nc.Extras_f[fmt.Sprintf("MINDEPTH:%d", int(profile))] = minDepth
 		nc.Extras_f[fmt.Sprintf("DEPTH:%d", int(profile))] = math.Floor(maxDepth)
 		nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile))] = "UNKNOW"
+		nc.Variables_1D["TYPECAST"] = append(nc.Variables_1D["TYPECAST"].([]float64), 0)
 		
 		// reset value for next loop
 		maxDepth = 0
@@ -101,10 +103,11 @@ func secondPassXBT(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,o
 	
 	// initialize profile 
 	var nbProfile int = 0
-	var Etat bool = true
+	
 
 	// loop over each files passed throw command line
 	for _, file := range files {
+		var Etat bool = true
 		var line int = 0
 
 		fid, err := os.Open(file)
@@ -132,13 +135,12 @@ func secondPassXBT(nc *lib.Nc,m *config.Map,cfg toml.Configtoml,files []string,o
 					for _, key := range m.Hdr {
 						if key != "PRFL" {
 							lib.SetData(nc.Variables_2D[key],nbProfile,line,config.GetData(m.Data[key]))
-							fmt.Println("Line: ", line, "key: ", key, " data: ", m.Data[key])
+							//fmt.Println("Line: ", line, "key: ", key, " data: ", m.Data[key])
 						}
 						
 					}
 					// exit loop if reach maximum pressure for the profile
 					if m.Data["DEPTH"] == nc.Extras_f[fmt.Sprintf("DEPTH:%d", int(profile))] {
-						fmt.Println("Profondeur max")
 						downcast = false
 					}
 					

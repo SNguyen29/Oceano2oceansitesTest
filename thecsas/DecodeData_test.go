@@ -23,11 +23,13 @@ var m config.Map
 
 m = config.InitMap()
 
-fmt.Println("Debut fichier LADCP :")
+ncTest.Extras_s = make(map[string]string)
 
-TestFile := "../data/FileTestDecodeData3.lad"
+fmt.Println("Debut fichier THERMO :")
 
-var profileTest float64 = 00201
+TestFile := "../data/FileTestDecodeData5.TEST"
+
+var profileTest float64 = 1
 
 	var line int = 0
 

@@ -102,6 +102,8 @@ type Configtoml struct{
 	Seabird struct{
 		Prefix				string
 		Header				string
+		HeaderBTL			string
+		HeaderBTL2			string
 		Cruise 				string
 		Ship 				string
 		Station 			string
@@ -125,7 +127,6 @@ type Configtoml struct{
 		}
 	
 	Thecsas struct{
-		Header				string
 		Data				string
 		}
 		

@@ -42,7 +42,6 @@ func GetConfigLADCP(nc *lib.Nc,m *Map,cfg toml.Configtoml,configFile string,Type
 	nc.Variables_1D["LATITUDE"] = []float64{}
 	nc.Variables_1D["LONGITUDE"] = []float64{}
 	nc.Variables_1D["TYPECAST"] = []float64{}
-	nc.Variables_1D["TYPECAST"] = append(nc.Variables_1D["TYPECAST"].([]float64), 0)
 	nc.Roscop = roscop.NewRoscop(cfg.Roscopfile)
 
 	// add some global attributes for profile, change in future

@@ -25,7 +25,7 @@ m = config.InitMap()
 
 fmt.Println("Debut fichier LADCP :")
 
-TestFile := "../data/FileTestDecodeData3.lad"
+TestFile := "../data/FileTestDecodeData3.TEST"
 
 var profileTest float64 = 00201
 

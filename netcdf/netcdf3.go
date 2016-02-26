@@ -64,6 +64,16 @@ func WriteNetcdf(nc *lib.Nc,m *config.Map, cfg toml.Configtoml,ncType string,pre
 	for key, _ := range nc.Variables_1D {
 		// convert types from code_roscop structure to native netcdf types
 		var netcdfType netcdf.Type
+		
+		/*//remove LATITUDE and LONGITUDE from the key list if thermo file
+		if ncType=="THERMO"{
+			if key == "LATITUDE" {
+				continue
+			}
+			if key == "LONGITUDE" {
+				continue
+			}
+		}*/
 
 		pa := roscop.GetAttributesStringValue(key, "types")
 		switch pa {
@@ -123,6 +133,11 @@ func WriteNetcdf(nc *lib.Nc,m *config.Map, cfg toml.Configtoml,ncType string,pre
 		if key == "PRFL" {
 			continue
 		}
+		
+		/*if key == "SSJT" {
+			continue
+		}*/
+	
 		// convert types from code_roscop structure to native netcdf types
 		var netcdfType netcdf.Type
 
@@ -139,7 +154,7 @@ func WriteNetcdf(nc *lib.Nc,m *config.Map, cfg toml.Configtoml,ncType string,pre
 		}
 		v, err := ds.AddVar(key, netcdfType, dim_2D)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(err) 
 		}
 		map_2D[key] = v
 
@@ -185,7 +200,6 @@ func WriteNetcdf(nc *lib.Nc,m *config.Map, cfg toml.Configtoml,ncType string,pre
 	// Create the data with the above dimensions and type,
 	// write them to the file.
 	for key, value := range nc.Variables_1D {
-
 		// convert types from code_roscop structure to native netcdf types
 		switch roscop.GetAttributesStringValue(key, "types") {
 		case "int32":

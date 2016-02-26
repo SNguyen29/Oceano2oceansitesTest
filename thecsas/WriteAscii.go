@@ -21,6 +21,10 @@ const (
 func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr []string, inst string,prefixAll string) {
 	// define 2 files, profiles header and data
 	var asciiFilename string
+	var lat2 string
+	var latdecimal float64
+	var longdecimal float64
+	var long2 string
 
 	// build filenames
 	str := nc.Attributes["cycle_mesure"]
@@ -73,7 +77,7 @@ func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr
 		fmt.Fprintf(lib.Debug, "%s   ", key)
 	}
 	// append new line
-	fmt.Fprintln(fbuf_ascii, "\n")
+	//fmt.Fprintln(fbuf_ascii, "\n")
 
 	// write second line header on ascii file
 	fmt.Fprintln(fbuf_ascii, str)
@@ -92,26 +96,37 @@ func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr
 	// loop over each profile
 	for x := 0; x < len_1D; x++ {
 		str = ""
-		t1 := lib.NewTimeFromJulian(time[x])
 		// write profile informations to ASCII data file with DEPTH = -1
+		t1 := lib.NewTimeFromJulian(time[x])
+		var t = lib.NewTimeFromString("Jan 02 2006 15:04:05", nc.Extras_s[fmt.Sprintf("Stopttime:%d", int(profile[x]))])
+		t2 := lib.NewTimeFromJulian(t.Time2JulianDec())
 		// TODOS: adapt profile format to stationPrefixLength
-		fmt.Fprintf(fbuf_ascii, "%05.0f %f %f %f ",
+		fmt.Fprintf(fbuf_ascii, "%05.0f %4d %f %f %f %s",
 			profile[x],
+			codeForProfile,
 			t1.JulianDayOfYear(),
 			lat[x],
 			lon[x],
 			t1.Format("20060102150405"))
 
+		if longdecimal, err := lib.Position2Decimal(nc.Extras_s[fmt.Sprintf("Stoplongpos:%d", int(profile[x]))]); err == nil {
+				long2 = lib.DecimalPosition2String(longdecimal,0)
+			}
+		if latdecimal, err := lib.Position2Decimal(nc.Extras_s[fmt.Sprintf("Stoplatpos:%d", int(profile[x]))]); err == nil {
+				lat2 = lib.DecimalPosition2String(latdecimal,0)
+			}		
+		
 		// write profile informations to header file
-		str = fmt.Sprintf("%05.0f %s  %s %s %4.4g %4.4g %s %s\n",
+		str = fmt.Sprintf("%05.0f %s %s %s %s %s %s %s %s\n",
 			profile[x],
 			t1.Format("02/01/2006 15:04:05"),
+			t2.Format("02/01/2006 15:04:05"),
 			lib.DecimalPosition2String(lat[x], 0),
 			lib.DecimalPosition2String(lon[x], 0),
-			nc.Extras_f[fmt.Sprintf("MINPRES:%d", int(profile[x]))],
-			nc.Extras_f[fmt.Sprintf("PRES:%d", int(profile[x]))],
+			lat2,
+			long2,
 			nc.Extras_s[fmt.Sprintf("TYPECAST:%s", int(profile[x]))],	
-			cfg.Ladcp.CruisePrefix+nc.Extras_s[fmt.Sprintf("PRFL_NAME:%d", int(profile[x]))])
+			nc.Extras_s[fmt.Sprintf("PRFL_NAME:%d", int(profile[x]))]+cfg.Thermo.CruisePrefix)
 
 		// write profile information to header file
 		fmt.Fprintf(fbuf_hdr, str)
@@ -127,7 +142,11 @@ func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr
 
 		// loop over each level
 		for y := 0; y < len_2D; y++ {
-			
+			// goto next profile when max depth reach
+			if lib.GetData(nc.Variables_2D["LAT"])[x][y] ==
+				latdecimal && lib.GetData(nc.Variables_2D["LONG"])[x][y] == longdecimal {
+				continue
+			}
 			fmt.Fprintf(fbuf_ascii, "%05.0f ", profile[x])
 			// loop over each physical parameter (key) in the rigth order
 			for _, key := range hdr {
@@ -139,7 +158,11 @@ func WriteAscii(nc *lib.Nc,cfg toml.Configtoml,map_format map[string]string, hdr
 					if data == 1e36 {
 						fmt.Fprintf(fbuf_ascii, "%g ", data)
 					} else {
-						fmt.Fprintf(fbuf_ascii, map_format[key]+" ", data)
+						if strings.ContainsAny(map_format[key],"lf"){
+								res := strings.Split(map_format[key],"l")
+								map_format[key] = strings.Join(res,"")
+							}
+						fmt.Fprintf(fbuf_ascii, map_format[key], data)
 					}
 				}
 			}
