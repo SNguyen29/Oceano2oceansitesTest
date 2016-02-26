@@ -20,22 +20,32 @@ before_install:
   - go get github.com/fhs/go-netcdf/netcdf
   - go get github.com/pborman/getopt
   - go get github.com/BurntSushi/toml
+  - go get github.com/SNguyen29/Oceano2oceansitesTest/toml
+  - go get github.com/SNguyen29/Oceano2oceansitesTest/roscop
+  - go get github.com/SNguyen29/Oceano2oceansitesTest/lib
+  - go get github.com/SNguyen29/Oceano2oceansitesTest/config
+  - go get github.com/SNguyen29/Oceano2oceansitesTest/analyse
+  - go get github.com/SNguyen29/Oceano2oceansitesTest/netcdf
+  - go get github.com/SNguyen29/Oceano2oceansitesTest/mk21
+  - go get github.com/SNguyen29/Oceano2oceansitesTest/seabird
+  - go get github.com/SNguyen29/Oceano2oceansitesTest/thecsas
+  - go get github.com/SNguyen29/Oceano2oceansitesTest/ifm
 
 
 install :
   - go install github.com/fhs/go-netcdf/netcdf
   - go install github.com/pborman/getopt
   - go install github.com/BurntSushi/toml
-  - go install ../Oceano2oceansitesTest/toml
-  - go install ../Oceano2oceansitesTest/roscop
-  - go install ../Oceano2oceansitesTest/lib
-  - go install ../Oceano2oceansitesTest/config
-  - go install ../Oceano2oceansitesTest/analyse
-  - go install ../Oceano2oceansitesTest/netcdf
-  - go install ../Oceano2oceansitesTest/mk21
-  - go install ../Oceano2oceansitesTest/seabird
-  - go install ../Oceano2oceansitesTest/thecsas
-  - go install ../Oceano2oceansitesTest/ifm
+  - go install github.com/SNguyen29/Oceano2oceansitesTest/toml
+  - go install github.com/SNguyen29/Oceano2oceansitesTest/roscop
+  - go install github.com/SNguyen29/Oceano2oceansitesTest/lib
+  - go install github.com/SNguyen29/Oceano2oceansitesTest/config
+  - go install github.com/SNguyen29/Oceano2oceansitesTest/analyse
+  - go install github.com/SNguyen29/Oceano2oceansitesTest/netcdf
+  - go install github.com/SNguyen29/Oceano2oceansitesTest/mk21
+  - go install github.com/SNguyen29/Oceano2oceansitesTest/seabird
+  - go install github.com/SNguyen29/Oceano2oceansitesTest/thecsas
+  - go install github.com/SNguyen29/Oceano2oceansitesTest/ifm
  
 script:
   - go build -i
