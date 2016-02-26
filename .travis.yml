@@ -18,8 +18,8 @@ before_install:
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew install netcdf; fi
 
 install :
-  - go install -v ./... ifm 
+  - go install -v ./... GOPATH/src/github.com/user/repo/ifm
  
 script:
-  - go install -v GOPATH/src/github.com/user/repo
+  - go install -v 
   - ls
