@@ -25,16 +25,16 @@ install :
   - go install github.com/fhs/go-netcdf/netcdf
   - go install github.com/pborman/getopt
   - go install github.com/BurntSushi/toml
-  - go install -v ../Oceano2oceansitesTest/toml
-  - go install -v ../Oceano2oceansitesTest/roscop
-  - go install -v ../Oceano2oceansitesTest/lib
-  - go install -v ../Oceano2oceansitesTest/config
-  - go install -v ../Oceano2oceansitesTest/analyse
-  - go install -v ../Oceano2oceansitesTest/netcdf
-  - go install -v ../Oceano2oceansitesTest/mk21
-  - go install -v ../Oceano2oceansitesTest/seabird
-  - go install -v ../Oceano2oceansitesTest/thecsas
-  - go install -v ../Oceano2oceansitesTest/ifm
+  - go install ../Oceano2oceansitesTest/toml
+  - go install ../Oceano2oceansitesTest/roscop
+  - go install ../Oceano2oceansitesTest/lib
+  - go install ../Oceano2oceansitesTest/config
+  - go install ../Oceano2oceansitesTest/analyse
+  - go install ../Oceano2oceansitesTest/netcdf
+  - go install ../Oceano2oceansitesTest/mk21
+  - go install ../Oceano2oceansitesTest/seabird
+  - go install ../Oceano2oceansitesTest/thecsas
+  - go install ../Oceano2oceansitesTest/ifm
  
 script:
   - go build -i
