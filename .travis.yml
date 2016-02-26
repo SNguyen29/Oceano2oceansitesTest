@@ -16,8 +16,7 @@ before_install:
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew tap homebrew/science; fi
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew update; fi
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew install netcdf; fi
-  - go env
-  - export PATH="$GOPATH/bin:$PATH"
+  - export GOPATH="$GOPATH//src/github.com/SNguyen29:$GOPATH"
   - go get github.com/fhs/go-netcdf/netcdf
   - go get github.com/pborman/getopt
   - go get github.com/BurntSushi/toml
