@@ -2,7 +2,7 @@
 
 package lib
 
-import "Oceano2oceansitesTest/roscop"
+import "github.com/SNguyen29/Oceano2oceansitesTest/roscop"
 
 type Data_2D struct {
 	data [][]float64
