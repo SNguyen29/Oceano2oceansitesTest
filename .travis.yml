@@ -17,10 +17,10 @@ before_install:
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew tap homebrew/science; fi
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew update; fi
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew install netcdf; fi
-  - tree $GOPATH
   - go get github.com/fhs/go-netcdf/netcdf
   - go get github.com/pborman/getopt
   - go get github.com/BurntSushi/toml
+  - tree $GOROOT
   - go get github.com/SNguyen29/Oceano2oceansitesTest/toml
   - go get github.com/SNguyen29/Oceano2oceansitesTest/roscop
   - go get github.com/SNguyen29/Oceano2oceansitesTest/lib
