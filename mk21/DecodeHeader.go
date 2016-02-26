@@ -5,10 +5,9 @@ package mk21
 
 import (
 	"fmt"
-	//"strings"
 	"regexp"
-	"Oceano2oceansitesTest/lib"
-	"Oceano2oceansitesTest/toml"
+	"github.com/SNguyen29/Oceano2oceansitesTest/lib"
+	"github.com/SNguyen29/Oceano2oceansitesTest/toml"
 )
 
 // parse header line from .cnv and extract correct information

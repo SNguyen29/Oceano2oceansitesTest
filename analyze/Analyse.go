@@ -3,7 +3,7 @@
 
 package analyze
 
-import "Oceano2oceansitesTest/toml"
+import "github.com/SNguyen29/Oceano2oceansitesTest/toml"
 
 type Structfile struct{
 	Constructeur 	Constructor

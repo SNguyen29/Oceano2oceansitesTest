@@ -4,14 +4,11 @@
 package config
 
 import (
-	//"code.google.com/p/gcfg"
 	"fmt"
-	//"log"
 	"strconv"
-	//"strings"
-	"Oceano2oceansitesTest/lib"
-	"Oceano2oceansitesTest/toml"
-	"Oceano2oceansitesTest/roscop"
+	"github.com/SNguyen29/Oceano2oceansitesTest/lib"
+	"github.com/SNguyen29/Oceano2oceansitesTest/toml"
+	"github.com/SNguyen29/Oceano2oceansitesTest/roscop"
 )
 
 type xbt struct {

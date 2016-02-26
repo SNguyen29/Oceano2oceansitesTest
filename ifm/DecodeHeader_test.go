@@ -6,8 +6,8 @@ package ifm
 import "testing"
 import "fmt"
 import "regexp"
-import "Oceano2oceansitesTest/lib"
-import "Oceano2oceansitesTest/toml"
+import "github.com/SNguyen29/Oceano2oceansitesTest/lib"
+import "github.com/SNguyen29/Oceano2oceansitesTest/toml"
 
 func TestDecodeHeaderIfm(t *testing.T){
 	

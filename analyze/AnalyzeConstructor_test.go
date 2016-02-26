@@ -5,7 +5,7 @@ import "testing"
 
 import (
 	"fmt"
-	"Oceano2oceansitesTest/toml"
+	"github.com/SNguyen29/Oceano2oceansitesTest/toml"
 )
 
 //function for testing ReadGlobal

@@ -6,9 +6,9 @@ package config
 import (
 	"fmt"
 	"strconv"
-	"Oceano2oceansitesTest/roscop"
-	"Oceano2oceansitesTest/lib"
-	"Oceano2oceansitesTest/toml"
+	"github.com/SNguyen29/Oceano2oceansitesTest/roscop"
+	"github.com/SNguyen29/Oceano2oceansitesTest/lib"
+	"github.com/SNguyen29/Oceano2oceansitesTest/toml"
 
 )
 

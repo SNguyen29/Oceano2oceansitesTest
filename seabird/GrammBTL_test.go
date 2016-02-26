@@ -5,9 +5,9 @@ package seabird
 
 import "testing"
 import "fmt"
-import "Oceano2oceansitesTest/toml"
-import "Oceano2oceansitesTest/config"
-import "Oceano2oceansitesTest/lib"
+import "github.com/SNguyen29/Oceano2oceansitesTest/toml"
+import "github.com/SNguyen29/Oceano2oceansitesTest/config"
+import "github.com/SNguyen29/Oceano2oceansitesTest/lib"
 
 func TestFirstPass(t *testing.T){
 	

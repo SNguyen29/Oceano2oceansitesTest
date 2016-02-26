@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 	"regexp"
-	"Oceano2oceansitesTest/toml"
+	"github.com/SNguyen29/Oceano2oceansitesTest/toml"
 )
 
 // define constante for constructor type

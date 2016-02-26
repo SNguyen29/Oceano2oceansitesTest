@@ -7,7 +7,7 @@ import "testing"
 
 import (
 	"fmt"
-	"Oceano2oceansitesTest/lib"
+	"github.com/SNguyen29/Oceano2oceansitesTest/lib"
 )
 
 //function for testing GetProfileNumber

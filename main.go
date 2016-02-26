@@ -4,16 +4,16 @@ package main
 import (
 	"fmt"
 	"log"
-	"Oceano2oceansitesTest/lib"
-	"Oceano2oceansitesTest/config"
-	"Oceano2oceansitesTest/toml"
+	"github.com/SNguyen29/Oceano2oceansitesTest/lib"
+	"github.com/SNguyen29/Oceano2oceansitesTest/config"
+	"github.com/SNguyen29/Oceano2oceansitesTest/toml"
 	"io"
 	"io/ioutil"
-	"Oceano2oceansitesTest/analyze"
-	"Oceano2oceansitesTest/seabird"
-	"Oceano2oceansitesTest/ifm"
-	"Oceano2oceansitesTest/thecsas"
-	"Oceano2oceansitesTest/mk21"
+	"github.com/SNguyen29/Oceano2oceansitesTest/analyze"
+	"github.com/SNguyen29/Oceano2oceansitesTest/seabird"
+	"github.com/SNguyen29/Oceano2oceansitesTest/ifm"
+	"github.com/SNguyen29/Oceano2oceansitesTest/thecsas"
+	"github.com/SNguyen29/Oceano2oceansitesTest/mk21"
 	
 ) 
 

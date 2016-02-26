@@ -9,8 +9,8 @@ import (
 	"os"
 	"bufio"
 	"fmt"
-	"Oceano2oceansitesTest/lib"
-	"Oceano2oceansitesTest/config"
+	"github.com/SNguyen29/Oceano2oceansitesTest/lib"
+	"github.com/SNguyen29/Oceano2oceansitesTest/config"
 )
 
 

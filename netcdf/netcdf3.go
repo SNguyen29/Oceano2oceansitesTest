@@ -7,9 +7,9 @@ import (
 	"strings"
 	"io"
 	"io/ioutil"
-	"Oceano2oceansitesTest/lib"
-	"Oceano2oceansitesTest/config"
-	"Oceano2oceansitesTest/toml"
+	"github.com/SNguyen29/Oceano2oceansitesTest/lib"
+	"github.com/SNguyen29/Oceano2oceansitesTest/config"
+	"github.com/SNguyen29/Oceano2oceansitesTest/toml"
 )
 
 // use for debug mode

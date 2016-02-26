@@ -9,7 +9,7 @@ import (
 	//"log"
 	//"strconv"
 	//"strings"
-	"Oceano2oceansitesTest/lib"
+	"github.com/SNguyen29/Oceano2oceansitesTest/lib"
 )
 
 type sadcp struct {

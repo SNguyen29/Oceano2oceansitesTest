@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 	"regexp"
-	"Oceano2oceansitesTest/toml"
+	"github.com/SNguyen29/Oceano2oceansitesTest/toml"
 )
 
 // read all cnv files and return dimensions

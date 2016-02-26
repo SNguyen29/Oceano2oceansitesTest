@@ -4,7 +4,7 @@ package thecsas
 
 import (
 	"fmt"
-	"Oceano2oceansitesTest/lib"
+	"github.com/SNguyen29/Oceano2oceansitesTest/lib"
 )
 
 func GetProfileNumber(nc *lib.Nc,profile int) float64 {
