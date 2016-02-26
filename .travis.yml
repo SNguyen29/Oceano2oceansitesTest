@@ -16,6 +16,8 @@ before_install:
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew tap homebrew/science; fi
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew update; fi
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then brew install netcdf; fi
+  - go get github.com/fhs/go-netcdf/netcdf
+  - go get github.com/pborman/getopt
 
 install :
   - go install github.com/fhs/go-netcdf/netcdf
